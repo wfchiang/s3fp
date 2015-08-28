@@ -11,6 +11,9 @@ Currently, the high floating-point error scenarios include:
 
 - divergence (discrete value deviation) 
 
+The error scenarios are triggered with witnessing inputs. 
+Such inputs can be useful in various purposes such as program analysis and tuning. 
+
 
 Installation
 ------------
