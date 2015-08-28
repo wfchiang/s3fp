@@ -14,6 +14,10 @@ Currently, the high floating-point error scenarios include:
 The error scenarios are triggered with witnessing inputs. 
 Such inputs can be useful in various purposes such as program analysis and tuning. 
 
+For more information, please refer to the related publications: 
+
+- Wei-Fan Chiang, Ganesh Gopalakrishnan, Zvonimir Rakamaric, and Alexey Solovyev. "Efficient search for inputs causing high floating-point errors". In PPoPP, 2014. 
+
 
 Installation
 ------------
