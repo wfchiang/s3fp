@@ -23,6 +23,4 @@ Installation
 ------------
 Please just use the python script "s3fp-install.py" for installation by 
 
-```
 **s3fp-install.py build** 
-```
