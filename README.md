@@ -21,3 +21,8 @@ For more information, please refer to the related publications:
 
 Installation
 ------------
+Please just use the python script "s3fp-install.py" for installation by 
+
+```
+s3fp-install.py build 
+```
