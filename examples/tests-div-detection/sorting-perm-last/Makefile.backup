@@ -1,0 +1,138 @@
+export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu/c++/4.6
+export CPLUS_INCLUDE_PATH=/usr/include/x86_64-linux-gnu/c++/4.6
+
+S3FP_BASE=../../..
+S3FP=$(S3FP_BASE)/s3fp
+
+OPT=-O0
+
+RMETHOD=0
+VMETHOD=0
+
+all: sorting-32 sorting-64 sorting-128 
+
+sorting-32: sorting.cpp 
+	g++ -I../../include $(OPT) -DWFT=float -o sorting-32 sorting.cpp 
+
+sorting-64: sorting.cpp 
+	g++ -I../../include $(OPT) -DWFT=double -o sorting-64 sorting.cpp 
+
+sorting-128: sorting.cpp 
+	g++ -I../../include $(OPT) -DWFT=__float128 -o sorting-128 sorting.cpp 
+
+clean: 
+	-rm *~
+	-rm __outdump
+	-rm output_*
+	-rm sorting-32 
+	-rm sorting-64
+	-rm sorting-128 
+	-rm random_input
+	-rm output_32
+	-rm output_64
+	-rm output_128
+	-rm __outdump
+	-rm unstable_error 
+	-rm s3fp_outdump
+
+
+# ==== for s3fp ==== 
+
+N=256
+RSEED=6900
+TIMEOUT=3000
+RESOURCE=TIME
+
+# FTERROR=SORTING_DIV
+# DIV_FUNC=SORTING_DIV
+ERR_OPT=SUM
+ERR_FUNC=ABSRELMAXONE
+SIG_FUNC=BOUNDED_LSE
+DIFF_CON=BOUNDED_LSE
+
+OPT_FUNC=REL
+OPT_RANGE=WIDE
+OPT4J_ERRTYPE=8
+OPT_REPRESENT=MIX
+
+REL_DELTA=0.0
+UNIFORM_INPUTLB=-100.0
+UNIFORM_INPUTUB=100.0
+
+# INPUT_RANGE_FILE=iranges 
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./sorting-32 $(RMETHOD) $(VMETHOD) >> s3fp_setting 
+	@echo OUTPUT_LP = output_32 >> s3fp_setting 
+	@echo EXE_HP = ./sorting-128 $(RMETHOD) $(VMETHOD) >> s3fp_setting 
+	@echo OUTPUT_HP = output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+#	@echo FTERROR = $(FTERROR) >> s3fp_setting
+	@echo OPT_REPRESENT = $(OPT_REPRESENT) >> s3fp_setting
+	@echo OPT_RANGE = $(OPT_RANGE) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+#	@echo PARALLELRT = false >> s3fp_setting
+	@echo CHECK_UNSTABLE_ERROR = true >> s3fp_setting
+	@echo UNSTABLE_ERROR_REPORT = unstable_error >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo SIG_FUNC = $(SIG_FUNC) >> s3fp_setting 
+	@echo DIFF_CON = $(DIFF_CON) >> s3fp_setting 
+#	@echo OPT_FUNC = $(OPT_FUNC) >> s3fp_setting 
+#	@echo DIV_FUNC = $(DIV_FUNC) >> s3fp_setting 
+
+create-opt4j-config: 
+	@echo "==== generate opt4j-config.xml ====" 
+	$(S3FP_BASE)/utils/opt4j-config-gen.py ./opt4j-config.xml ./ $(N) 0 $(TIMEOUT) $(OPT4J_ERRTYPE) $(UNIFORM_INPUTLB) $(UNIFORM_INPUTUB) "./sorting-32 $(RMETHOD) $(VMETHOD)" ./output_32 "./sorting-128 $(RMETHOD) $(VMETHOD)" ./output_128  
+
+uniform-input: create-base-conf 
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(UNIFORM_INPUTLB) >> s3fp_setting 
+	@echo UNIFORM_INPUTUB = $(UNIFORM_INPUTUB) >> s3fp_setting
+
+non-uniform-input: create-base-conf
+	@echo UNIFORM_INPUT = false >> s3fp_setting	
+	@echo INPUT_RANGE_FILE = $(INPUT_RANGE_FILE) >> s3fp_setting 
+	@echo "==== generate input range file ====" 
+# NOTE: N must be a certain integer's square 
+	gen-input-ranges $(INPUT_RANGE_FILE) $(N2_ROOT) $(N2_ROOT) $(UNIFORM_INPUTLB) $(UNIFORM_INPUTUB) $(UNIFORM_INPUTLB) $(UNIFORM_INPUTUB) 
+
+test-urt: uniform-input
+	@echo RT = URT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-bgrt: uniform-input
+	@echo RT = BGRT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-ils: uniform-input
+	@echo RT = ILS >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-opt4j: uniform-input create-opt4j-config 
+	@echo RT = OPT4J >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-robust: uniform-input create-opt4j-config 
+	@echo RT = ROBUST_EST >> s3fp_setting 
+	@echo SP_SELECTION_METHOD = $(SP_SELECTION_METHOD) >> s3fp_setting 
+	@echo ROBUST_EST_SP_SEARCH = $(ROBUST_EST_SP_SEARCH) >> s3fp_setting 
+	@echo SP_SELECTION_TIMEOUT = $(SP_SELECTION_TIMEOUT) >> s3fp_setting 
+	@echo LS_REFINEMENT = $(LS_REFINEMENT) >> s3fp_setting 
+	@echo LS_WIDEN_RADIUS = $(LS_WIDEN_RADIUS) >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-urob: uniform-input
+	@echo RT = UROBUST_CHECK >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 

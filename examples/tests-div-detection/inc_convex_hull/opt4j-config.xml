@@ -1,0 +1,29 @@
+<configuration> 
+  <module class="org.opt4j.optimizers.ea.EvolutionaryAlgorithmModule"> 
+    <property name="generations">100000</property> 
+    <property name="alpha">100</property> 
+    <property name="mu">25</property> 
+    <property name="lambda">25</property> 
+    <property name="crossoverRate">0.95</property> 
+  </module> 
+  <module class="org.opt4j.viewer.ViewerModule"> 
+    <property name="closeEvent">STOP</property> 
+    <property name="closeOnStop">false</property> 
+    <property name="title">Opt4J 3.0.1 Viewer</property> 
+  </module> 
+  <module class="s3fp.S3FPModule"> 
+    <property name="baseDir">./</property> 
+    <property name="errType">6</property> 
+    <property name="inputSize">8</property> 
+    <property name="loBound">-100.0</property> 
+    <property name="hiBound">100.0</property> 
+    <property name="inputFile">random_input</property> 
+    <property name="lowExe">./inc_convex_hull_32 0 0 </property> 
+    <property name="highExe">./inc_convex_hull_128 0 0 </property> 
+    <property name="lowOutputFile">./output_32</property> 
+    <property name="highOutputFile">./output_128</property> 
+    <property name="inputCons">0</property> 
+    <property name="sampleSize">1</property> 
+    <property name="optTimeout">180</property> 
+  </module> 
+</configuration> 

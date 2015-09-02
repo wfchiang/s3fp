@@ -1,0 +1,69 @@
+
+CC=gcc
+
+all: kahan-32 kahan-64 kahan-128
+
+kahan-32: kahan-sum.c
+	$(CC) -DIFT=float -DOFT=__float128 -DWFT=float -o kahan-32 kahan-sum.c -lquadmath 
+kahan-64: kahan-sum.c
+	$(CC) -DIFT=float -DOFT=__float128 -DWFT=double -o kahan-64 kahan-sum.c -lquadmath 
+kahan-128: kahan-sum.c
+	$(CC) -DIFT=float -DOFT=__float128 -DWFT=__float128 -o kahan-128 kahan-sum.c -lquadmath 
+
+N=4
+TIMEOUT=5
+RESOURCE=SVE
+RSEED=0
+ERR_OPT=LAST
+ERR_FUNC=REL
+REL_DELTA=0.001
+INPUTLB=-100.0
+INPUTUB=100.0
+
+S3FP=../../s3fp
+
+# creates a base config file
+create-base-conf:
+	@echo "==== generate s3fp_setting ===="
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./kahan-32 >> s3fp_setting 
+	@echo OUTPUT_LP = ./kahan_output_32 >> s3fp_setting 
+	@echo EXE_HP = ./kahan-128 >> s3fp_setting 
+	@echo OUTPUT_HP = ./kahan_output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(INPUTLB) >> s3fp_setting
+	@echo UNIFORM_INPUTUB = $(INPUTUB) >> s3fp_setting
+
+test-urt: create-base-conf
+	@echo RT = URT >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP)
+
+test-bgrt: create-base-conf
+	@echo RT = BGRT >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP)
+
+test-ils: create-base-conf
+	@echo RT = ILS >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP)
+
+test-pso: create-base-conf
+	@echo RT = PSO >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP)
+
+clean:
+	-rm kahan-32 kahan-64 kahan-128
+	-rm random_input 
+	-rm kahan_output*
+	-rm best_input
+	-rm __outdump

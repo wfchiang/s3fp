@@ -1,0 +1,6 @@
+
+DIR_S3FP = /home/wfchiang/numerical_precision/s3fp/trunk
+
+COMP_INC = -I/home/wfchiang/numerical_precision/s3fp/
+COMP_LIB = -L/home/wfchiang/numerical_precision/s3fp/trunk/tests 
+LINK_LIB = -ldiv_geometric_primitives 

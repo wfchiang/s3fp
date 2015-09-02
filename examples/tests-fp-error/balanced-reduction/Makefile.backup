@@ -1,0 +1,69 @@
+
+export LD_LIBRARY_PATH := ../../:$(LD_LIBRARY_PATH)
+
+CC=g++
+
+S3FP_DIR=../..
+
+N=1024
+TIMEOUT=100
+RESOURCE=SVE # or TIME
+INPUTLB=-100.0
+INPUTUB=100.0
+RSEED=0
+ERR_OPT=LAST
+ERR_FUNC=ABSREL
+REL_DELTA=0.001 
+
+all: balanced-reduction-32 balanced-reduction-64 balanced-reduction-128
+
+balanced-reduction-32: balanced-reduction.c
+	$(CC) -o balanced-reduction-32 -DFT=float balanced-reduction.c
+balanced-reduction-64: balanced-reduction.c
+	$(CC) -o balanced-reduction-64 -DFT=double balanced-reduction.c
+balanced-reduction-128: balanced-reduction.c
+	$(CC) -o balanced-reduction-128 -DFT=__float128 balanced-reduction.c 
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./balanced-reduction-32 >> s3fp_setting 
+	@echo OUTPUT_LP = ./test_output_32 >> s3fp_setting 
+	@echo EXE_HP = ./balanced-reduction-128 >> s3fp_setting 
+	@echo OUTPUT_HP = ./test_output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(INPUTLB) >> s3fp_setting
+	@echo UNIFORM_INPUTUB = $(INPUTUB) >> s3fp_setting
+
+test-urt: create-base-conf
+	@echo RT = URT >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP_DIR)/s3fp 
+
+test-bgrt: create-base-conf
+	@echo RT = BGRT >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP_DIR)/s3fp 
+
+test-ils: create-base-conf
+	@echo RT = ILS >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP_DIR)/s3fp 
+
+test-pso: create-base-conf
+	@echo RT = PSO >> s3fp_setting
+	@echo "==== run s3fp ====" 
+	@$(S3FP_DIR)/s3fp 
+
+clean:
+	-rm balanced-reduction-32 balanced-reduction-64 balanced-reduction-128 
+	-rm test_input* test_output_*
+	-rm __outdump
+	-rm best_input

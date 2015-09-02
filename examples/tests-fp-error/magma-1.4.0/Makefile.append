@@ -1,0 +1,124 @@
+
+# ==== Makefile setting for S3FP ====
+
+S3FP_TIMEOUT=100
+S3FP_RESOURCE=SVE
+S3FP_RSEED=0
+S3FP_FTERROR=REL
+S3FP_REL_DELTA=0.001
+S3FP_INPUTLB=-100.0
+S3FP_INPUTUB=100.0
+
+S3FP_INPUT_M=16
+S3FP_INPUT_N=16
+# M * N
+S3FP_INPUT_SIZE_GETRF=256
+S3FP_INPUT_SIZE_GEQRF=256
+# (M * N) * 3 + 2
+S3FP_INPUT_SIZE_GEMM=770
+
+S3FP_EXE=/home/wfchiang/numerical_precision/s3fp/trunk/s3fp
+S3FP_CHECK_UNSTABLE_ERROR=false
+
+MAGMA_DEV=1
+
+export LD_LIBRARY_PATH := /home/wfchiang/lib/cuda-5.5/lib64:$(LD_LIBRARY_PATH)
+
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ===="
+	@echo TIMEOUT = $(S3FP_TIMEOUT) > s3fp_setting
+	@echo RESOURCE = $(S3FP_RESOURCE) >> s3fp_setting
+	@echo RSEED = $(S3FP_RSEED) >> s3fp_setting
+	@echo FTERROR = $(S3FP_FTERROR) >> s3fp_setting
+	@echo REL_DELTA = $(S3FP_REL_DELTA) >> s3fp_setting
+	@echo PARALLELRT = false >> s3fp_setting
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(S3FP_INPUTLB) >> s3fp_setting
+	@echo UNIFORM_INPUTUB = $(S3FP_INPUTUB) >> s3fp_setting
+	@echo N_INPUT_REPEATS = 10 >> s3fp_setting
+	@echo N_OUTPUTS = 10 >> s3fp_setting
+
+test-urt-geqrf: create-base-conf
+	@echo RT = URT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEQRF) geqrf_input "testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgeqrf_output "testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgeqrf_output
+
+test-bgrt-geqrf: create-base-conf
+	@echo RT = BGRT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEQRF) geqrf_input "testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgeqrf_output "testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgeqrf_output
+
+test-ils-geqrf: create-base-conf
+	@echo RT = ILS >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEQRF) geqrf_input "testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgeqrf_output "testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgeqrf_output
+
+test-pso-geqrf: create-base-conf
+	@echo RT = PSO >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEQRF) geqrf_input "testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgeqrf_output "testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgeqrf_output
+
+test-urt-getrf: create-base-conf
+	@echo RT = URT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GETRF) getrf_input "testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgetrf_output "testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgetrf_output
+
+test-bgrt-getrf: create-base-conf
+	@echo RT = BGRT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GETRF) getrf_input "testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgetrf_output "testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgetrf_output
+
+test-ils-getrf: create-base-conf
+	@echo RT = ILS >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GETRF) getrf_input "testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgetrf_output "testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgetrf_output
+
+test-pso-getrf: create-base-conf
+	@echo RT = PSO >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GETRF) getrf_input "testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgetrf_output "testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgetrf_output
+
+test-urt-gemm: create-base-conf
+	@echo RT = URT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEMM) gemm_input "testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgemm_output "testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgemm_output
+
+test-bgrt-gemm: create-base-conf
+	@echo RT = BGRT >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEMM) gemm_input "testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgemm_output "testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgemm_output
+
+test-ils-gemm: create-base-conf
+	@echo RT = ILS >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEMM) gemm_input "testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgemm_output "testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgemm_output
+
+test-pso-gemm: create-base-conf
+	@echo RT = PSO >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP_EXE) 32 $(S3FP_INPUT_SIZE_GEMM) gemm_input "testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" sgemm_output "testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)" dgemm_output
+
+s3fp-clean:
+	-rm geqrf_input*
+	-rm getrf_input*
+	-rm gemm_input*
+	-rm sgeqrf_output*
+	-rm sgetrf_output*
+	-rm sgemm_output*
+	-rm dgeqrf_output*
+	-rm dgetrf_output*
+	-rm dgemm_output*
+
+
+
+
+
+
+
+
+
+
+
+
+

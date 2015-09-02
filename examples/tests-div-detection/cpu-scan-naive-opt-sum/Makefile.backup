@@ -1,0 +1,125 @@
+
+CC=g++ 
+
+SCAN_METHOD = 0 
+OPT_METHOD = 1
+
+OPT=-O0
+
+all: cpu-scan-32 cpu-scan-64 cpu-scan-128 
+
+cpu-scan-32: cpu-scan.cpp 
+	$(CC) $(OPT) -I../../include -DWFT=float -o cpu-scan-32 cpu-scan.cpp 
+
+cpu-scan-64: cpu-scan.cpp 
+	$(CC) $(OPT) -I../../include -DWFT=double -o cpu-scan-64 cpu-scan.cpp 
+
+cpu-scan-128: cpu-scan.cpp 
+	$(CC) $(OPT) -I../../include -DWFT=__float128 -o cpu-scan-128 cpu-scan.cpp 
+
+clean: 
+	-rm __outdump
+	-rm output_*
+	-rm *~
+	-rm cpu-scan-32 
+	-rm cpu-scan-64
+	-rm cpu-scan-128 
+	-rm random_input
+	-rm output_32
+	-rm output_64
+	-rm output_128
+	-rm __outdump
+	-rm unstable_error 
+	-rm s3fp_outdump
+
+
+# ======== s3fp ========
+
+S3FP_BASE=../../..
+S3FP=$(S3FP_BASE)/s3fp
+
+N=128
+RSEED=6700
+TIMEOUT=3000
+RESOURCE=TIME
+
+# FTERROR=SCANNING_DIV 
+# FTERROR=FIRST_FPS_AND_DIS
+ERR_OPT=SUM
+ERR_FUNC=ABSRELMAXONE
+SIG_FUNC=LAST_INT
+DIFF_CON=LAST_INT
+
+OPT_FUNC=REL
+OPT_RANGE=WIDE
+OPT4J_ERRTYPE=6
+OPT_REPRESENT=MIX
+
+REL_DELTA=0.0
+UNIFORM_INPUTLB=0.0
+UNIFORM_INPUTUB=100.0
+DIV_FUNC=CONSIST
+
+SP_SELECTION_METHOD=SEARCH
+ROBUST_EST_SP_SEARCH=BGRT
+SP_SELECTION_TIMEOUT=180 
+LS_REFINEMENT=SORT_RANGE
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = "./cpu-scan-32 $(SCAN_METHOD) $(OPT_METHOD)" >> s3fp_setting  
+	@echo OUTPUT_LP = output_32 >> s3fp_setting 
+	@echo EXE_HP = "./cpu-scan-128 $(SCAN_METHOD) $(OPT_METHOD)" >> s3fp_setting 
+	@echo OUTPUT_HP = output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+#	@echo FTERROR = $(FTERROR) >> s3fp_setting
+	@echo OPT_REPRESENT = $(OPT_REPRESENT) >> s3fp_setting
+	@echo OPT_RANGE = $(OPT_RANGE) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+#	@echo PARALLELRT = false >> s3fp_setting
+	@echo CHECK_UNSTABLE_ERROR = true >> s3fp_setting
+	@echo UNSTABLE_ERROR_REPORT = unstable_error >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo SIG_FUNC = $(SIG_FUNC) >> s3fp_setting 
+	@echo DIFF_CON = $(DIFF_CON) >> s3fp_setting 
+#	@echo OPT_FUNC = $(OPT_FUNC) >> s3fp_setting 
+#	@echo DIV_FUNC = $(DIV_FUNC) >> s3fp_setting 
+
+uniform-input: create-base-conf 
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(UNIFORM_INPUTLB) >> s3fp_setting 
+	@echo UNIFORM_INPUTUB = $(UNIFORM_INPUTUB) >> s3fp_setting
+
+test-urt: uniform-input
+	@echo RT = URT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-bgrt: uniform-input
+	@echo RT = BGRT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-ils: uniform-input
+	@echo RT = ILS >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-robust: uniform-input create-opt4j-config 
+	@echo RT = ROBUST_EST >> s3fp_setting 
+	@echo SP_SELECTION_METHOD = $(SP_SELECTION_METHOD) >> s3fp_setting 
+	@echo ROBUST_EST_SP_SEARCH = $(ROBUST_EST_SP_SEARCH) >> s3fp_setting 
+	@echo SP_SELECTION_TIMEOUT = $(SP_SELECTION_TIMEOUT) >> s3fp_setting 
+	@echo LS_REFINEMENT = $(LS_REFINEMENT) >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-urob: uniform-input
+	@echo RT = UROBUST_CHECK >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 

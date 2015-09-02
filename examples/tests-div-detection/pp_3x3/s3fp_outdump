@@ -1,0 +1,31 @@
+==== generate s3fp_setting ====
+==== run s3fp ====
+/home/wfchiang/numerical_precision/s3fp/trunk/s3fp 
+==== S3FP arguments and settings ====
+input bit-width: 32
+n inputs: 12
+input_name: random_input
+LP EXE: ./pp-32 -> output_32
+HP EXE: ./pp-128 -> output_128
+RT_MODE: 5
+TIMEOUT: 1800
+T_RESOURCE: 1
+RSEED: 19900
+ERR_OPT: 1
+ERR_FUNC: 1
+OPT_REPRESENT: MIX
+OPT_RANGE: WIDE
+UNIFORM_INPUT: 1
+REL_DELTA: 0
+UNIFORM_INPUTLB: -100
+UNIFORM_INPUTUB: 100
+WIDDEN FRAC.: 1e-05
+CHECK UNSTABLE ERROR: 1
+UNSTABLE_ERROR_REPORT: unstable_error
+=====================================
+Try to find the initial inputs...
+Initial inputs found!
+Div. Detected after : 27 samples
+Found a div. in time: 0
+# Restarts: 0
+==== backup the last input ====

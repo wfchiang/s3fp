@@ -1,0 +1,28 @@
+==== generate s3fp_setting ====
+==== run s3fp ====
+../../../s3fp 
+==== S3FP arguments and settings ====
+input bit-width: 32
+n inputs: 18
+input_name: random_input
+LP EXE: ./3d-lt2at-32 0 -> output_32
+HP EXE: ./3d-lt2at-exact 0 -> output_exact
+RT_MODE: 10
+TIMEOUT: 1000000
+T_RESOURCE: 2
+RSEED: 0
+ERR_OPT: 1
+ERR_FUNC: 2
+OPT_REPRESENT: MIX
+OPT_RANGE: WIDE
+UNIFORM_INPUT: 1
+REL_DELTA: 0
+UNIFORM_INPUTLB: -100
+UNIFORM_INPUTUB: 100
+WIDDEN FRAC.: 1e-05
+CHECK UNSTABLE ERROR: 1
+UNSTABLE_ERROR_REPORT: unstable_error
+=====================================
+# Divs: 0
+# Samples: 1000000
+Div. Rate: 0.000000000000000000000000000000 

@@ -1,0 +1,14 @@
+
+DIR_S3FP = /home/wfchiang/numerical_precision/s3fp/trunk
+DIR_S3FP_TLIB = $(DIR_S3FP)/tests/lib
+DIR_S3FP_TINC = $(DIR_S3FP)/tests/include 
+
+COMP_INC = -I$(DIR_S3FP_TINC) -I$(DIR_S3FP_TLIB)/div_geometric_primitives 
+COMP_LIB = -L$(DIR_S3FP_TLIB)/div_geometric_primitives
+LINK_LIB = -ldiv_geometric_primitives -lquadmath 
+
+COMP_OPT = -O0 
+
+COMP_OPTIONS = $(COMP_OPT) $(COMP_INC) $(COMP_LIB) 
+
+export LD_LIBRARY_PATH=$(DIR_S3FP_TLIB)/div_geometric_primitives:$LD_LIBRARY_PATH

@@ -1,0 +1,55 @@
+
+export C_INCLUDE_PATH=/usr/include/x86_64-linux-gnu/c++/4.6
+export CPLUS_INCLUDE_PATH=/usr/include/x86_64-linux-gnu/c++/4.6
+
+
+CC = g++
+
+# BOOST_INC = -I /home/weifan/lib/boost_1_54_0
+BOOST_INC = -I /home/wfchiang/lib/boost_1_54_0
+QD_HOME=/home/wfchiang/lib/qd-2.3.14/install
+
+CORE_CFLAG = -std=c++0x # -DS3FP_VERBOSE
+S3FP_EXE = s3fp
+S3FP_EXE_VERBOSE = s3fp-verb
+S3FP_EXE_DD = s3fp-dd
+
+
+all: ioutils error-function error-optimization output-parser signature-gen differential-contract core-fp128 core-fp128-verbose # compile-opt4j 
+
+error-function: S3FP_ErrorFunction.cpp S3FP_ErrorFunction.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_ErrorFunction.cpp 
+
+error-optimization: S3FP_ErrorOptimization.cpp S3FP_ErrorOptimization.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_ErrorOptimization.cpp 
+
+output-parser: S3FP_OutputParser.cpp S3FP_OutputParser.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_OutputParser.cpp -lquadmath 
+
+signature-gen: S3FP_SignatureGen.cpp S3FP_SignatureGen.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_SignatureGen.cpp 
+
+differential-contract: S3FP_DifferentialContract.cpp S3FP_DifferentialContract.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_DifferentialContract.cpp 
+
+core-fp128: parser S3FP_Core.cpp S3FP_Core.h 
+	$(CC) $(CORE_CFLAG) $(BOOST_INC) -c S3FP_Core.cpp
+	$(CC) -o $(S3FP_EXE) S3FP_ErrorFunction.o S3FP_ErrorOptimization.o S3FP_ParseArgs.o S3FP_OutputParser.o S3FP_SignatureGen.o S3FP_DifferentialContract.o  S3FP_Core.o -lpthread -lquadmath
+
+core-fp128-verbose: parser S3FP_Core.cpp S3FP_Core.h 
+	$(CC) -DS3FP_VERBOSE $(CORE_CFLAG) $(BOOST_INC) -c S3FP_Core.cpp
+	$(CC) -o $(S3FP_EXE_VERBOSE) S3FP_ErrorFunction.o S3FP_ErrorOptimization.o S3FP_ParseArgs.o S3FP_OutputParser.o S3FP_SignatureGen.o S3FP_DifferentialContract.o  S3FP_Core.o -lpthread -lquadmath
+
+parser: S3FP_ParseArgs.cpp S3FP_ParseArgs.h 
+	$(CC) -c S3FP_ParseArgs.cpp 
+
+ioutils: S3FP_IOUTILS.cpp 
+	$(CC) -Wall -c S3FP_IOUTILS.cpp
+	ar -cvq libS3FP_IOUTILS.a S3FP_IOUTILS.o 
+
+compile-opt4j:
+	$(MAKE) -C opt4j/jfp/native 
+
+clean:
+	-rm *~
+	-rm $(S3FP_EXE) $(S3FP_EXE_VERBOSE) $(S3FP_EXE_DD) libS3FP_IOUTILS.a *.o ExhaustiveTester 

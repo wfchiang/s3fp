@@ -1,0 +1,149 @@
+
+S3FP_BASE=../../..
+S3FP=$(S3FP_BASE)/s3fp
+
+# VERBOSE=-D__VERBOSE
+IFT=float
+
+all: shortest-path-32 shortest-path-64 shortest-path-128 
+
+shortest-path-32: shortest-path.cpp 
+	g++ -O0 -I../../include $(VERBOSE) -DIFT=$(IFT) -DWFT=float -o shortest-path-32 shortest-path.cpp 
+
+shortest-path-64: shortest-path.cpp 
+	g++ -O0 -I../../include $(VERBOSE) -DIFT=$(IFT) -DWFT=double -o shortest-path-64 shortest-path.cpp 
+
+shortest-path-128: shortest-path.cpp 
+	g++ -O0 -I../../include $(VERBOSE) -DIFT=$(IFT) -DWFT=__float128 -o shortest-path-128 shortest-path.cpp 
+
+clean: 
+	-rm shortest-path-32
+	-rm shortest-path-64
+	-rm shortest-path-128 
+	-rm output_*
+	-rm __outdump 
+	-rm *~
+
+# ==== for s3fp ==== 
+
+# N=12 # 4 nodes total 
+# N=90 # 10 nodes total
+# N=600 # 25 nodes total 
+# N=2450 # 50 nodes total 
+N=2450
+RSEED=3700
+TIMEOUT=1700
+RESOURCE=TIME
+
+# FTERROR=FIRST_FPS_AND_DIS 
+ERR_OPT=FIRST
+ERR_FUNC=REL
+SIG_FUNC=LAST_INT
+DIFF_CON=LAST_INT
+
+OPT_FUNC=REL
+ifeq ($(OPT_FUNC), REL)
+OPT_RANGE=WIDE
+OPT4J_ERRTYPE=6
+else 
+  ifeq ($(OPT_FUNC), LOWP_VALUE)
+  OPT_RANGE=WIDE
+  OPT4J_ERRTYPE=7
+  else
+  $(error Invalid OPT_FUNC ...)
+  endif 
+endif 
+
+OPT_REPRESENT=MIX
+
+REL_DELTA=0.0
+UNIFORM_INPUTLB=-1.0
+UNIFORM_INPUTUB=10.0
+DIV_FUNC=CONSIST
+# AWBS_FIXED_INITIALA=true
+AWBS_FIXED_INITIALA=false
+
+SP_SELECTION_METHOD=SEARCH 
+ROBUST_EST_SP_SEARCH=BGRT
+SP_SELECTION_TIMEOUT=180 
+LS_REFINEMENT=SORT_RANGE
+LS_WIDEN_RADIUS=0.005
+
+# INPUT_RANGE_FILE=iranges 
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./shortest-path-32 >> s3fp_setting 
+	@echo OUTPUT_LP = output_32 >> s3fp_setting 
+#	@echo EXE_LP = ./shortest-path-64 >> s3fp_setting 
+# 	@echo OUTPUT_LP = output_64 >> s3fp_setting 
+	@echo EXE_HP = ./shortest-path-128 >> s3fp_setting 
+	@echo OUTPUT_HP = output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+#	@echo FTERROR = $(FTERROR) >> s3fp_setting
+	@echo OPT_REPRESENT = $(OPT_REPRESENT) >> s3fp_setting
+	@echo OPT_RANGE = $(OPT_RANGE) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+#	@echo PARALLELRT = false >> s3fp_setting
+	@echo CHECK_UNSTABLE_ERROR = true >> s3fp_setting
+	@echo UNSTABLE_ERROR_REPORT = unstable_error >> s3fp_setting
+#	@echo OPT_FUNC = $(OPT_FUNC) >> s3fp_setting 
+#	@echo DIV_FUNC = $(DIV_FUNC) >> s3fp_setting 
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting
+	@echo SIG_FUNC = $(SIG_FUNC) >> s3fp_setting 
+	@echo DIFF_CON = $(DIFF_CON) >> s3fp_setting 
+	@echo AWBS_FIXED_INITIALA = $(AWBS_FIXED_INITIALA) >> s3fp_setting 
+
+create-opt4j-config: 
+	@echo "==== generate opt4j-config.xml ====" 
+	$(S3FP_BASE)/utils/opt4j-config-gen.py ./opt4j-config.xml ./ $(N) 0 $(TIMEOUT) $(OPT4J_ERRTYPE) $(UNIFORM_INPUTLB) $(UNIFORM_INPUTUB) "./shortest-path-32" ./output_32 "./shortest-path-128" ./output_128  
+
+uniform-input: create-base-conf 
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(UNIFORM_INPUTLB) >> s3fp_setting 
+	@echo UNIFORM_INPUTUB = $(UNIFORM_INPUTUB) >> s3fp_setting
+
+test-urt: uniform-input
+	@echo RT = URT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-bgrt: uniform-input
+	@echo RT = BGRT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-ils: uniform-input
+	@echo RT = ILS >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-opt4j: uniform-input create-opt4j-config 
+	@echo RT = OPT4J >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-robust: uniform-input create-opt4j-config 
+	@echo RT = ROBUST_EST >> s3fp_setting 
+	@echo SP_SELECTION_METHOD = $(SP_SELECTION_METHOD) >> s3fp_setting 
+	@echo ROBUST_EST_SP_SEARCH = $(ROBUST_EST_SP_SEARCH) >> s3fp_setting 
+	@echo SP_SELECTION_TIMEOUT = $(SP_SELECTION_TIMEOUT) >> s3fp_setting 
+	@echo LS_REFINEMENT = $(LS_REFINEMENT) >> s3fp_setting 
+	@echo LS_WIDEN_RADIUS = $(LS_WIDEN_RADIUS) >> s3fp_setting
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-urob: uniform-input
+	@echo RT = UROBUST_CHECK >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-awbs: uniform-input 
+	@echo RT = AWBS >> s3fp_setting 
+	@echo "==== run s3fp ====" 
+	$(S3FP) 

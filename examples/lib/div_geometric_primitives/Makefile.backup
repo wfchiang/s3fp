@@ -1,0 +1,23 @@
+
+all: libdiv_geometric_primitives.so compile_test_matrix_determinant 
+
+compile_test_matrix_determinant: test_matrix_determinant_32 test_matrix_determinant_64 test_matrix_determinant_128
+
+libdiv_geometric_primitives.so: div_geometric_primitives.h div_geometric_primitives.cpp 
+	g++ -fPIC -shared div_geometric_primitives.cpp -o libdiv_geometric_primitives.so 
+
+test_matrix_determinant_32: test_matrix_determinant.cpp 
+	g++ -DFT=float -L./ -o test_matrix_determinant_32 test_matrix_determinant.cpp -ldiv_geometric_primitives
+
+test_matrix_determinant_64: test_matrix_determinant.cpp 
+	g++ -DFT=double -L./ -o test_matrix_determinant_64 test_matrix_determinant.cpp -ldiv_geometric_primitives
+
+test_matrix_determinant_128: test_matrix_determinant.cpp 
+	g++ -DFT=__float128 -L./ -o test_matrix_determinant_128 test_matrix_determinant.cpp -ldiv_geometric_primitives
+
+clean:
+	-rm libdiv_geometric_primitives.so
+	-rm test_matrix_determinant_32
+	-rm test_matrix_determinant_64
+	-rm test_matrix_determinant_128
+	-rm *~

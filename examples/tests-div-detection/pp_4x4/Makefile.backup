@@ -1,0 +1,119 @@
+
+include ../Makefile.common 
+S3FP=$(DIR_S3FP)/s3fp
+
+all: pp-32 pp-64 pp-128 ranges_generator
+
+pp-32: pp_4x4.cpp
+	g++ $(COMP_OPTIONS) -DWFT=float -o pp-32 pp_4x4.cpp $(LINK_LIB) 
+
+pp-64: pp_4x4.cpp
+	g++ $(COMP_OPTIONS) -DWFT=double -o pp-64 pp_4x4.cpp $(LINK_LIB) 
+
+pp-128: pp_4x4.cpp
+	g++ $(COMP_OPTIONS) -DWFT=__float128 -o pp-128 pp_4x4.cpp $(LINK_LIB)
+
+# ranges_generator: 
+# 	g++ -o ranges_generator ranges_generator.cpp 
+
+clean: 
+	-rm pp-32
+	-rm pp-64
+	-rm pp-128
+	-rm __outdump
+	-rm *~
+	-rm output_*
+	-rm random_input
+	-rm output_32
+	-rm output_64
+	-rm output_128
+	-rm __outdump
+	-rm unstable_error 
+	-rm s3fp_outdump
+	-rm input-awbs-* 
+
+test: 
+	pp-32 ./random_input output_32 
+	$(DIR_S3FP)/utils/show-fp-stream 128 output_32
+	pp-128 ./random_input output_128 
+	$(DIR_S3FP)/utils/show-fp-stream 128 output_128 
+
+
+# ==== for s3fp ==== 
+N=12
+# RSEED=7000
+# TIMEOUT=1800
+# RESOURCE=TIME
+UNIFORM_INPUTLB=-100.0
+UNIFORM_INPUTUB=100.0
+
+ERR_OPT = FIRST 
+ERR_FUNC = REL
+SIG_FUNC = LAST_INT 
+DIFF_CON = LAST_INT 
+
+OPT_REPRESENT=MIX
+
+REL_DELTA=0.0
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./pp-32 >> s3fp_setting 
+	@echo OUTPUT_LP = output_32 >> s3fp_setting 
+	@echo EXE_HP = ./pp-128 >> s3fp_setting 
+	@echo OUTPUT_HP = output_128 >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+	@echo OPT_REPRESENT = $(OPT_REPRESENT) >> s3fp_setting
+	@echo OPT_RANGE = $(OPT_RANGE) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+	@echo CHECK_UNSTABLE_ERROR = true >> s3fp_setting
+	@echo UNSTABLE_ERROR_REPORT = unstable_error >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo SIG_FUNC = $(SIG_FUNC) >> s3fp_setting 
+	@echo DIFF_CON = $(DIFF_CON) >> s3fp_setting 
+
+uniform-input: create-base-conf 
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(UNIFORM_INPUTLB) >> s3fp_setting 
+	@echo UNIFORM_INPUTUB = $(UNIFORM_INPUTUB) >> s3fp_setting
+
+test-urt: uniform-input
+	@echo RT = URT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-bgrt: uniform-input
+	@echo RT = BGRT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-ils: uniform-input
+	@echo RT = ILS >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-robust: uniform-input create-opt4j-config 
+	@echo RT = ROBUST_EST >> s3fp_setting 
+	@echo SP_SELECTION_METHOD = $(SP_SELECTION_METHOD) >> s3fp_setting 
+	@echo ROBUST_EST_SP_SEARCH = $(ROBUST_EST_SP_SEARCH) >> s3fp_setting 
+	@echo SP_SELECTION_TIMEOUT = $(SP_SELECTION_TIMEOUT) >> s3fp_setting 
+	@echo LS_REFINEMENT = $(LS_REFINEMENT) >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-urob: uniform-input
+	@echo RT = UROBUST_CHECK >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-awbs: uniform-input 
+	@echo RT = AWBS >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+	@echo "==== backup last input ====" 
+	@cp random_input input-awbs-$(RSEED)

@@ -1,0 +1,165 @@
+
+
+
+CGALDIR=/home/wfchiang/lib/CGAL-4.4
+BOOSTDIR=/home/wfchiang/lib/boost_1_54_0
+
+OPT=-O0
+VMETHOD=0
+
+all: 3d-lt2at-32 3d-lt2at-exact view-plot 
+
+3d-lt2at-32: 3d-lt2at.cpp ../../include/cgal_precision_selection.h ../../include/cgal_convexhull_wrapper.h 
+	g++ $(OPT) -std=c++0x -DCGAL_NO_POSTCONDITIONS -DIFT=float -DOFT=__float128 -DCGALK32 -I../../include -I$(BOOSTDIR) -I$(CGALDIR)/include -L$(CGALDIR)/lib -o 3d-lt2at-32 3d-lt2at.cpp -lboost_system-mt -lboost_thread-mt -lCGAL -lmpfr -lgmp 
+
+3d-lt2at-64: 3d-lt2at.cpp ../../include/cgal_precision_selection.h ../../include/cgal_convexhull_wrapper.h 
+	g++ $(OPT) -std=c++0x -DCGAL_NO_POSTCONDITIONS -DIFT=float -DOFT=__float128 -DCGALK64 -I../../include -I$(BOOSTDIR) -I$(CGALDIR)/include -L$(CGALDIR)/lib -o 3d-lt2at-64 3d-lt2at.cpp -lboost_system-mt -lboost_thread-mt -lCGAL -lmpfr -lgmp 
+
+3d-lt2at-exact: 3d-lt2at.cpp ../../include/cgal_precision_selection.h ../../include/cgal_convexhull_wrapper.h 
+	g++ $(OPT) -std=c++0x -DCGAL_NO_POSTCONDITIONS -DIFT=float -DOFT=__float128 -DCGALKEXACT -I../../include -I$(BOOSTDIR) -I$(CGALDIR)/include -L$(CGALDIR)/lib -o 3d-lt2at-exact 3d-lt2at.cpp -lboost_system-mt -lboost_thread-mt -lCGAL -lmpfr -lgmp 
+
+view-plot: view-plot.cpp 
+	g++ -o view-plot view-plot.cpp
+
+test:
+	./3d-lt2at-32 $(VMETHOD) random_input output_32 
+	../../../utils/show-fp-stream 128 output_32
+	./3d-lt2at-exact $(VMETHOD) random_input output_exact
+	../../../utils/show-fp-stream 128 output_exact 
+
+clean:
+	-rm 3d-lt2at-32
+	-rm 3d-lt2at-64
+	-rm 3d-lt2at-exact
+	-rm assertion-handler 
+	-rm random_input
+	-rm best_input_*
+	-rm s3fp_setting 
+	-rm s3fp_outdump 
+	-rm unstable_error 
+	-rm output_*
+	-rm __outdump
+	-rm *~
+	-rm *.aux
+	-rm *.log 
+	-rm plot*.pdf
+	-rm plot*.tex 
+
+# ==== for s3fp ==== 
+
+N=18
+RSEED=0
+TIMEOUT=1000000
+RESOURCE=SVE
+
+S3FP_BASE=../../..
+S3FP=$(S3FP_BASE)/s3fp
+
+# FTERROR=FIRST_FPS_AND_DIS
+# FTERROR=FPS_AND_DIS_4DIV
+ERR_OPT=FIRST
+ERR_FUNC=ABSREL
+
+ifeq ($(VMETHOD), 0)
+SIG_FUNC=FIVESTAGE
+DIFF_CON=FIVESTAGE
+endif
+
+OPT_REPRESENT=MIX
+REL_DELTA=0.0
+
+UNIFORM_INPUTLB=-100.0
+UNIFORM_INPUTUB=100.0
+CHECK_UNSTABLE_ERROR=true
+
+SP_SELECTION_METHOD=SEARCH 
+ROBUST_EST_SP_SEARCH=BGRT 
+SP_SELECTION_TIMEOUT=180
+LS_REFINEMENT=SORT_RANGE
+
+export LD_LIBRARY_PATH=$(CGALDIR)/lib:$LD_LIBRARY_PATH
+
+create-base-conf:
+	@echo "==== generate s3fp_setting ====" 
+	@echo N_VARS = $(N) > s3fp_setting 
+	@echo INPUT_FILE = random_input >> s3fp_setting 
+	@echo EXE_LP = ./3d-lt2at-32 $(VMETHOD) >> s3fp_setting 
+	@echo OUTPUT_LP = output_32 >> s3fp_setting 
+	@echo EXE_HP = ./3d-lt2at-exact $(VMETHOD) >> s3fp_setting 
+	@echo OUTPUT_HP = output_exact >> s3fp_setting 
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
+	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
+	@echo RSEED = $(RSEED) >> s3fp_setting
+# 	@echo FTERROR = $(FTERROR) >> s3fp_setting
+	@echo OPT_REPRESENT = $(OPT_REPRESENT) >> s3fp_setting
+	@echo OPT_RANGE = $(OPT_RANGE) >> s3fp_setting 
+	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
+# 	@echo PARALLELRT = $(PARALLELRT) >> s3fp_setting
+	@echo CHECK_UNSTABLE_ERROR = $(CHECK_UNSTABLE_ERROR) >> s3fp_setting
+	@echo UNSTABLE_ERROR_REPORT = unstable_error >> s3fp_setting
+	@echo ERR_OPT = $(ERR_OPT) >> s3fp_setting 
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting 
+	@echo SIG_FUNC = $(SIG_FUNC) >> s3fp_setting 
+	@echo DIFF_CON = $(DIFF_CON) >> s3fp_setting 
+#	@echo OPT_FUNC = $(OPT_FUNC) >> s3fp_setting 
+#	@echo DIV_FUNC = $(DIV_FUNC) >> s3fp_setting 
+
+create-opt4j-config: 
+	@echo "==== generate opt4j-config.xml ====" 
+	$(S3FP_BASE)/utils/opt4j-config-gen.py ./opt4j-config.xml ./ $(N) 0 $(TIMEOUT) $(OPT4J_ERRTYPE) $(UNIFORM_INPUTLB) $(UNIFORM_INPUTUB) "./3d-lt2at-32" ./output_32 "./3d-lt2at-exact" ./output_exact
+
+uniform-input: create-base-conf 
+	@echo UNIFORM_INPUT = true >> s3fp_setting
+	@echo UNIFORM_INPUTLB = $(UNIFORM_INPUTLB) >> s3fp_setting 
+	@echo UNIFORM_INPUTUB = $(UNIFORM_INPUTUB) >> s3fp_setting
+
+test-urt: uniform-input
+	@echo RT = URT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-bgrt: uniform-input
+	@echo RT = BGRT >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+	@echo "==== generate plot ====" 
+	view-plot random_input plot_$(RSEED).tex
+
+test-opt4j: uniform-input create-opt4j-config
+	@echo RT = OPT4J >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-robust: uniform-input create-opt4j-config
+	@echo RT = ROBUST_EST >> s3fp_setting 
+	@echo SP_SELECTION_METHOD = $(SP_SELECTION_METHOD) >> s3fp_setting 
+	@echo ROBUST_EST_SP_SEARCH = $(ROBUST_EST_SP_SEARCH) >> s3fp_setting 
+	@echo SP_SELECTION_TIMEOUT = $(SP_SELECTION_TIMEOUT) >> s3fp_setting 
+	@echo LS_REFINEMENT = $(LS_REFINEMENT) >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-urob: uniform-input
+	@echo RT = UROBUST_CHECK >> s3fp_setting 
+	@echo "==== run s3fp ===="
+	$(S3FP) 
+
+test-awbs-true: uniform-input
+	@echo RT = AWBS >> s3fp_setting 
+	@echo AWBS_FIVESTAGE_ASSIST = true >> s3fp_setting 
+	@echo "==== run s3fp ====" 
+	$(S3FP) 
+	@echo "==== generate plot ====" 
+#	view-plot random_input plot_$(RSEED).tex
+
+test-awbs-false: uniform-input
+	@echo RT = AWBS >> s3fp_setting 
+	@echo AWBS_FIVESTAGE_ASSIST = false >> s3fp_setting 
+	@echo "==== run s3fp ====" 
+	$(S3FP) 
+	@echo "==== generate plot ====" 
+#	view-plot random_input plot_$(RSEED).tex
+
+test-awbs: test-awbs-true 
+# test-awbs: test-awbs-false 
+

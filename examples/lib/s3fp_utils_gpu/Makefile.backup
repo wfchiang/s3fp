@@ -1,0 +1,13 @@
+
+CC=g++ 
+
+all: s3fp_utils_gpu
+
+s3fp_utils_gpu: s3fp_utils_gpu.cpp 
+	$(CC) -fpic -c s3fp_utils_gpu.cpp 
+	$(CC) -shared -o libs3fp_utils_gpu.so s3fp_utils_gpu.o 
+
+clean: 
+	-rm *~
+	-rm *.o
+	-rm *.so

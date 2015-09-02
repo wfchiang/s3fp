@@ -1,0 +1,8 @@
+ps-32 ./random_input output_32 
+/home/wfchiang/numerical_precision/s3fp/trunk/utils/show-fp-stream 128 output_32
+[0]: 512.00000000000000000000
+[1]: 1.00000000000000000000
+ps-128 ./random_input output_128 
+/home/wfchiang/numerical_precision/s3fp/trunk/utils/show-fp-stream 128 output_128 
+[0]: 212.33204591524480520093
+[1]: 1.00000000000000000000
