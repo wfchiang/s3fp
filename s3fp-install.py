@@ -17,6 +17,7 @@ if (OPT == "build"):
     os.system("automake --add-missing")
     os.system("autoconf")
     os.system("./configure --prefix=/home/wfchiang/tools/s3fp")
+    os.system("make") 
 
 elif (OPT == "clean"):
     os.system("make clean") 
