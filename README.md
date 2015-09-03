@@ -39,3 +39,9 @@ S3FP requies a configuration file that
 
 - it needs to be placed at the current working directory. 
 
+The format of the config. file is a list of lines that each of them satisfying the following syntax: 
+
+```
+[Option] = [Value]
+```
+
