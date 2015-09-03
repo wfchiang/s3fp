@@ -35,7 +35,7 @@ Usage
 ### Configuration File
 S3FP requies a configuration file that 
 
-- it needs to be named as "s3fp_setting" and 
+- it needs to be named as "**s3fp_setting**" and 
 
 - it needs to be placed at the current working directory. 
 
@@ -44,4 +44,12 @@ The format of the config. file is a list of lines that each of them satisfying t
 ```
 [Option] = [Value]
 ```
+The options and their available values are listed as follows: 
+
+- **RT**: the option of input searching strategy
+    * **URT**: unguided random testing, which is pure random testing
+    * **BGRT**: binary guided random testing 
+    * **ILS**: iterative local search 
+    * **PSO**: partical swarm optimization 
+    
 
