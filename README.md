@@ -46,10 +46,23 @@ The format of the config. file is a list of lines that each of them satisfying t
 ```
 The options and their available values are listed as follows: 
 
-- **RT**: the option of input searching strategy
+- **RT**: the option of input searching strategy. 
+It can be one of the following strings: 
     * **URT**: unguided random testing, which is pure random testing
     * **BGRT**: binary guided random testing 
     * **ILS**: iterative local search 
     * **PSO**: partical swarm optimization 
-    
+
+- **TIMEOUT**: the option of timeout value. 
+The value needs to be a positive integer. 
+The meansing of the value is defined by option **RESOURCE**. 
+
+- **RESOURCE**: the option of resource type. 
+This option explains the meaning of the value specified by option **TIMEOUT**. 
+It can be one of the following strings: 
+    * **SVE**: the value of **TIMEOUT** specifies the number of input enumerations 
+    * **TIME**: the value of **TIMEOUT** specifies the number of ellapse seconds 
+
+- **RSEED**: the random number seed. 
+The value needs to be a non-negative integer. 
 
