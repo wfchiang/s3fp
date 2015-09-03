@@ -54,7 +54,7 @@ It can be one of the following strings:
     * **PSO**: partical swarm optimization 
 
 - **TIMEOUT**: the option of timeout value. 
-The value needs to be a positive integer. 
+The value needs to be a **positive integer**. 
 The meansing of the value is defined by option **RESOURCE**. 
 
 - **RESOURCE**: the option of resource type. 
@@ -64,5 +64,5 @@ It can be one of the following strings:
     * **TIME**: the value of **TIMEOUT** specifies the number of ellapse seconds 
 
 - **RSEED**: the random number seed. 
-The value needs to be a non-negative integer. 
+The value needs to be a **non-negative integer**. 
 
