@@ -2,6 +2,7 @@ S3FP
 ====
 
 
+
 About S3FP
 ----------
 S3FP is a dynamic testing tool for triggering high floating-point error scenarios of programs. 
@@ -19,6 +20,7 @@ For more information, please refer to the related publications:
 - Wei-Fan Chiang, Ganesh Gopalakrishnan, Zvonimir Rakamaric, and Alexey Solovyev. "Efficient search for inputs causing high floating-point errors". In PPoPP, 2014. 
 
 
+
 Installation
 ------------
 Please just use the python script "s3fp-install.py" for installation by 
@@ -26,4 +28,14 @@ Please just use the python script "s3fp-install.py" for installation by
 ```
 s3fp-install.py build
 ```
+
+
+Usage
+-----
+### Configuration File
+S3FP requies a configuration file that 
+
+- it needs to be named as "s3fp_setting" and 
+
+- it needs to be placed at the current working directory. 
 
