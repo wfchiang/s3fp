@@ -60,7 +60,7 @@ The output stream is in the format described as follows.
 
 
 | **number index** | description | 
-|--------|--------|
+| -------- | -------- |
 | 0 | An integer N (but is converted to a 128-bit floating-point number) which denotes that the following N numbers represent the program's numerical output. The following N numbers are used in floating-point round-off error estimation. |
 |--------|--------| 
 | 1 | output representing value | 
