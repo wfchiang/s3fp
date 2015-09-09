@@ -67,6 +67,7 @@ The output stream is in the format described as follows.
 | N | output representing value |
 | N+1 | An integer M (converted to 128-bit floating-point number) which denotes that the following M numbers represent the program's signature (discrete feature). The following M numbers are used in floating-point divergence detection. | 
 | N+2 | signature representing value |
+| ... | ... |
 | N+1+M | signature representing value | 
 
 #### I/O Consistency between the Programs and Their Real-number Versions 
