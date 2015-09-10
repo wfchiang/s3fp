@@ -73,6 +73,11 @@ The output stream is in the format described as follows.
 #### I/O Consistency between the Programs and Their Real-number Versions 
 At this point, we rely on the users to make sure that their programs and the corresponding real-number versions generate the same length of the numerical outputs and the same length of the signatures. 
 
+#### Divergence Detection 
+At this point, we rely on users to export **useful** information encoded in the signature part of the output stream for S3FP to detect divergence. 
+For example, considering a variance calculation program that a divergence is returning a negative variance, the program should check the sign of the calculated variance and report the checking result to S3FP (in an integer of indicating the sign). 
+S3FP should be (must be) able to judge whether a divergence occuring or not by only observing the signatures returned from both floating-point and real number executions. 
+
 
 ### Configuration File
 S3FP requies a configuration file that 
@@ -150,7 +155,11 @@ The error stream would be projected to a single value for the purpose of the com
     * **MAX**: is defined as max(E1, E2, ... EN). 
     * **AVE**: is defined as sum(E1, E2, ... EN) / N. 
 
-- REL_DELTA: a **floating-point number** works as a padding when calculating the related error. 
+- **REL_DELTA**: a **floating-point number** works as a padding when calculating the related error. 
 The default value is 0. 
 
+- **SIG_FUNC**: the function that check the differential contract, which is 
+**SIG_FUNC(Float's discrete results) == SIG_FUNC(Real's discrete results)**. 
 
+- **DIV_FUNC**: the function that check divergence based on the program's discrete results. 
+Again, at this point, we rely on programmers to export **useful** discrete results to S3FP such that S3FP can judge differential contract (the consistency between Float's and Real's signatures) and divergence by only observing the discrete results (from both Float and Real). 

@@ -294,7 +294,8 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       sig_func = stringToSigfunc(svalue); 
       has_sig_func = true; 
     }
-    else if (sname.compare("DIFF_CON") == 0) {
+    // else if (sname.compare("DIFF_CON") == 0) {
+    else if (sname.compare("DIV_FUNC") == 0) {
       diff_con = stringToSigfunc(svalue); 
       has_diff_con = true; 
     }
