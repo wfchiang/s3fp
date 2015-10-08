@@ -43,7 +43,10 @@ extern "C" {
 /* 
 Some S3FP Settings 
 */ 
+#ifndef INPUTV_TYPE 
 #define INPUTV_TYPE float
+#endif 
+
 #ifdef S3FP_DDIO 
 #define OUTPUTV_TYPE dd_real
 #define DD_OUTPUT_PRECISION 15
