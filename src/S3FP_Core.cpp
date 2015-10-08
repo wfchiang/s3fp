@@ -62,7 +62,6 @@ int main (int argc, char *argv[]) {
 			ERR_FUNC, 
 			SIG_FUNC, 
 			DIFF_CON, 
-			EXT_CON, 
 			OPT_REPRESENT, 
 			OPT_RANGE, 
 			REL_DELTA,

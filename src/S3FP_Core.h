@@ -32,12 +32,10 @@ unsigned int RSEED = 0;
 ENUM_ERR_OPT ERR_OPT = NA_ERR_OPT; 
 // the error function 
 ENUM_ERR_FUNC ERR_FUNC = NA_ERR_FUNC;
-// signature function 
+// signature function (differential contract) 
 ENUM_SIG_FUNC SIG_FUNC = NA_SIG_FUNC; 
-// differential contract 
+// this variable should actually be named as "DIV_FUNC" which check divergence (this is not always equal to differential contract) 
 ENUM_SIG_FUNC DIFF_CON = NA_SIG_FUNC;
-// external contract 
-ENUM_SIG_FUNC EXT_CON = NA_SIG_FUNC; 
 // given a range, how to find the representation number for opt. objective 
 ENUM_OPT_REPRESENT OPT_REPRESENT = MIX_OPT_REPRESENT;
 // indicate finding a wide range or a narrow rage 

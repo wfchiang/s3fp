@@ -245,7 +245,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       else if (svalue.compare("OPT4J") == 0) rt_mode = OPT4J_MODE; 
       else if (svalue.compare("ROBUST_EST") == 0) rt_mode = ROBUST_EST_RT_MODE; 
       else if (svalue.compare("UROBUST_CHECK") == 0) rt_mode = UROBUST_CHECK_RT_MODE; 
-      else if (svalue.compare("AWBS") == 0) rt_mode = AWBS_RT_MODE; 
+      else if (svalue.compare("ABS") || svalue.compare("AWBS") == 0) rt_mode = AWBS_RT_MODE; 
       else if (svalue.compare("EMT") == 0) rt_mode = EMT_RT_MODE; 
       else assert(false);
       has_rt_mode = true;
@@ -294,7 +294,8 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       sig_func = stringToSigfunc(svalue); 
       has_sig_func = true; 
     }
-    else if (sname.compare("DIFF_CON") == 0) {
+    // else if (sname.compare("DIFF_CON") == 0) {
+    else if (sname.compare("DIV_FUNC") == 0) {
       diff_con = stringToSigfunc(svalue); 
       has_diff_con = true; 
     }
