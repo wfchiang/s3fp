@@ -55,10 +55,13 @@ s3fp_DEPENDENCIES =
 s3fp_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(s3fp_LDFLAGS) $(LDFLAGS) -o $@
-am_s3fp_it128_OBJECTS = S3FP_ParseArgs.$(OBJEXT) \
-	S3FP_ErrorFunction.$(OBJEXT) S3FP_OutputParser.$(OBJEXT) \
-	S3FP_ErrorOptimization.$(OBJEXT) S3FP_SignatureGen.$(OBJEXT) \
-	S3FP_DifferentialContract.$(OBJEXT) S3FP_Core.$(OBJEXT)
+am_s3fp_it128_OBJECTS = s3fp_it128-S3FP_ParseArgs.$(OBJEXT) \
+	s3fp_it128-S3FP_ErrorFunction.$(OBJEXT) \
+	s3fp_it128-S3FP_OutputParser.$(OBJEXT) \
+	s3fp_it128-S3FP_ErrorOptimization.$(OBJEXT) \
+	s3fp_it128-S3FP_SignatureGen.$(OBJEXT) \
+	s3fp_it128-S3FP_DifferentialContract.$(OBJEXT) \
+	s3fp_it128-S3FP_Core.$(OBJEXT)
 s3fp_it128_OBJECTS = $(am_s3fp_it128_OBJECTS)
 s3fp_it128_DEPENDENCIES =
 s3fp_it128_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -100,9 +103,7 @@ AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
-
-# compilation flags 
-CFLAGS = -std=c++0x -Wno-unused-result 
+CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -211,6 +212,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+
+# compilation flags 
+AM_CPPFLAGS = -std=c++0x -Wno-unused-result 
 AM_LDFLAGS = 
 
 # for compiling s3fp 
@@ -221,7 +225,7 @@ s3fp_LDADD = -lpthread -lquadmath
 # for compiling s3fp_it128 
 # binary target for __float128 as the input type 
 s3fp_it128_SOURCES = S3FP_ParseArgs.cpp S3FP_ParseArgs.h S3FP_ErrorFunction.cpp S3FP_ErrorFunction.h S3FP_OutputParser.cpp S3FP_OutputParser.h S3FP_ErrorOptimization.cpp S3FP_ErrorOptimization.h S3FP_SignatureGen.cpp S3FP_SignatureGen.h S3FP_DifferentialContract.cpp S3FP_DifferentialContract.h S3FP_Core.cpp S3FP_Core.h 
-s3fp_it128_CFLAGS = -DINPUTV_TYPE=__float128 
+s3fp_it128_CPPFLAGS = -DINPUTV_TYPE=__float128 
 s3fp_it128_LDFLAGS = 
 s3fp_it128_LDADD = -lpthread -lquadmath 
 all: all-am
@@ -321,6 +325,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/S3FP_OutputParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/S3FP_ParseArgs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/S3FP_SignatureGen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_Core.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_OutputParser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -342,6 +353,104 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+s3fp_it128-S3FP_ParseArgs.o: S3FP_ParseArgs.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ParseArgs.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Tpo -c -o s3fp_it128-S3FP_ParseArgs.o `test -f 'S3FP_ParseArgs.cpp' || echo '$(srcdir)/'`S3FP_ParseArgs.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Tpo $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ParseArgs.cpp' object='s3fp_it128-S3FP_ParseArgs.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ParseArgs.o `test -f 'S3FP_ParseArgs.cpp' || echo '$(srcdir)/'`S3FP_ParseArgs.cpp
+
+s3fp_it128-S3FP_ParseArgs.obj: S3FP_ParseArgs.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ParseArgs.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Tpo -c -o s3fp_it128-S3FP_ParseArgs.obj `if test -f 'S3FP_ParseArgs.cpp'; then $(CYGPATH_W) 'S3FP_ParseArgs.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ParseArgs.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Tpo $(DEPDIR)/s3fp_it128-S3FP_ParseArgs.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ParseArgs.cpp' object='s3fp_it128-S3FP_ParseArgs.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ParseArgs.obj `if test -f 'S3FP_ParseArgs.cpp'; then $(CYGPATH_W) 'S3FP_ParseArgs.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ParseArgs.cpp'; fi`
+
+s3fp_it128-S3FP_ErrorFunction.o: S3FP_ErrorFunction.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ErrorFunction.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Tpo -c -o s3fp_it128-S3FP_ErrorFunction.o `test -f 'S3FP_ErrorFunction.cpp' || echo '$(srcdir)/'`S3FP_ErrorFunction.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Tpo $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ErrorFunction.cpp' object='s3fp_it128-S3FP_ErrorFunction.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ErrorFunction.o `test -f 'S3FP_ErrorFunction.cpp' || echo '$(srcdir)/'`S3FP_ErrorFunction.cpp
+
+s3fp_it128-S3FP_ErrorFunction.obj: S3FP_ErrorFunction.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ErrorFunction.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Tpo -c -o s3fp_it128-S3FP_ErrorFunction.obj `if test -f 'S3FP_ErrorFunction.cpp'; then $(CYGPATH_W) 'S3FP_ErrorFunction.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ErrorFunction.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Tpo $(DEPDIR)/s3fp_it128-S3FP_ErrorFunction.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ErrorFunction.cpp' object='s3fp_it128-S3FP_ErrorFunction.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ErrorFunction.obj `if test -f 'S3FP_ErrorFunction.cpp'; then $(CYGPATH_W) 'S3FP_ErrorFunction.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ErrorFunction.cpp'; fi`
+
+s3fp_it128-S3FP_OutputParser.o: S3FP_OutputParser.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_OutputParser.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Tpo -c -o s3fp_it128-S3FP_OutputParser.o `test -f 'S3FP_OutputParser.cpp' || echo '$(srcdir)/'`S3FP_OutputParser.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Tpo $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_OutputParser.cpp' object='s3fp_it128-S3FP_OutputParser.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_OutputParser.o `test -f 'S3FP_OutputParser.cpp' || echo '$(srcdir)/'`S3FP_OutputParser.cpp
+
+s3fp_it128-S3FP_OutputParser.obj: S3FP_OutputParser.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_OutputParser.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Tpo -c -o s3fp_it128-S3FP_OutputParser.obj `if test -f 'S3FP_OutputParser.cpp'; then $(CYGPATH_W) 'S3FP_OutputParser.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_OutputParser.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Tpo $(DEPDIR)/s3fp_it128-S3FP_OutputParser.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_OutputParser.cpp' object='s3fp_it128-S3FP_OutputParser.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_OutputParser.obj `if test -f 'S3FP_OutputParser.cpp'; then $(CYGPATH_W) 'S3FP_OutputParser.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_OutputParser.cpp'; fi`
+
+s3fp_it128-S3FP_ErrorOptimization.o: S3FP_ErrorOptimization.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ErrorOptimization.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Tpo -c -o s3fp_it128-S3FP_ErrorOptimization.o `test -f 'S3FP_ErrorOptimization.cpp' || echo '$(srcdir)/'`S3FP_ErrorOptimization.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Tpo $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ErrorOptimization.cpp' object='s3fp_it128-S3FP_ErrorOptimization.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ErrorOptimization.o `test -f 'S3FP_ErrorOptimization.cpp' || echo '$(srcdir)/'`S3FP_ErrorOptimization.cpp
+
+s3fp_it128-S3FP_ErrorOptimization.obj: S3FP_ErrorOptimization.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_ErrorOptimization.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Tpo -c -o s3fp_it128-S3FP_ErrorOptimization.obj `if test -f 'S3FP_ErrorOptimization.cpp'; then $(CYGPATH_W) 'S3FP_ErrorOptimization.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ErrorOptimization.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Tpo $(DEPDIR)/s3fp_it128-S3FP_ErrorOptimization.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_ErrorOptimization.cpp' object='s3fp_it128-S3FP_ErrorOptimization.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_ErrorOptimization.obj `if test -f 'S3FP_ErrorOptimization.cpp'; then $(CYGPATH_W) 'S3FP_ErrorOptimization.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_ErrorOptimization.cpp'; fi`
+
+s3fp_it128-S3FP_SignatureGen.o: S3FP_SignatureGen.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_SignatureGen.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Tpo -c -o s3fp_it128-S3FP_SignatureGen.o `test -f 'S3FP_SignatureGen.cpp' || echo '$(srcdir)/'`S3FP_SignatureGen.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Tpo $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_SignatureGen.cpp' object='s3fp_it128-S3FP_SignatureGen.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_SignatureGen.o `test -f 'S3FP_SignatureGen.cpp' || echo '$(srcdir)/'`S3FP_SignatureGen.cpp
+
+s3fp_it128-S3FP_SignatureGen.obj: S3FP_SignatureGen.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_SignatureGen.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Tpo -c -o s3fp_it128-S3FP_SignatureGen.obj `if test -f 'S3FP_SignatureGen.cpp'; then $(CYGPATH_W) 'S3FP_SignatureGen.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_SignatureGen.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Tpo $(DEPDIR)/s3fp_it128-S3FP_SignatureGen.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_SignatureGen.cpp' object='s3fp_it128-S3FP_SignatureGen.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_SignatureGen.obj `if test -f 'S3FP_SignatureGen.cpp'; then $(CYGPATH_W) 'S3FP_SignatureGen.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_SignatureGen.cpp'; fi`
+
+s3fp_it128-S3FP_DifferentialContract.o: S3FP_DifferentialContract.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_DifferentialContract.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Tpo -c -o s3fp_it128-S3FP_DifferentialContract.o `test -f 'S3FP_DifferentialContract.cpp' || echo '$(srcdir)/'`S3FP_DifferentialContract.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Tpo $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_DifferentialContract.cpp' object='s3fp_it128-S3FP_DifferentialContract.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_DifferentialContract.o `test -f 'S3FP_DifferentialContract.cpp' || echo '$(srcdir)/'`S3FP_DifferentialContract.cpp
+
+s3fp_it128-S3FP_DifferentialContract.obj: S3FP_DifferentialContract.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_DifferentialContract.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Tpo -c -o s3fp_it128-S3FP_DifferentialContract.obj `if test -f 'S3FP_DifferentialContract.cpp'; then $(CYGPATH_W) 'S3FP_DifferentialContract.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_DifferentialContract.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Tpo $(DEPDIR)/s3fp_it128-S3FP_DifferentialContract.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_DifferentialContract.cpp' object='s3fp_it128-S3FP_DifferentialContract.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_DifferentialContract.obj `if test -f 'S3FP_DifferentialContract.cpp'; then $(CYGPATH_W) 'S3FP_DifferentialContract.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_DifferentialContract.cpp'; fi`
+
+s3fp_it128-S3FP_Core.o: S3FP_Core.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_Core.o -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_Core.Tpo -c -o s3fp_it128-S3FP_Core.o `test -f 'S3FP_Core.cpp' || echo '$(srcdir)/'`S3FP_Core.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_Core.Tpo $(DEPDIR)/s3fp_it128-S3FP_Core.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_Core.cpp' object='s3fp_it128-S3FP_Core.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_Core.o `test -f 'S3FP_Core.cpp' || echo '$(srcdir)/'`S3FP_Core.cpp
+
+s3fp_it128-S3FP_Core.obj: S3FP_Core.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT s3fp_it128-S3FP_Core.obj -MD -MP -MF $(DEPDIR)/s3fp_it128-S3FP_Core.Tpo -c -o s3fp_it128-S3FP_Core.obj `if test -f 'S3FP_Core.cpp'; then $(CYGPATH_W) 'S3FP_Core.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_Core.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/s3fp_it128-S3FP_Core.Tpo $(DEPDIR)/s3fp_it128-S3FP_Core.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='S3FP_Core.cpp' object='s3fp_it128-S3FP_Core.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(s3fp_it128_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o s3fp_it128-S3FP_Core.obj `if test -f 'S3FP_Core.cpp'; then $(CYGPATH_W) 'S3FP_Core.cpp'; else $(CYGPATH_W) '$(srcdir)/S3FP_Core.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

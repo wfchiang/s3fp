@@ -56,8 +56,9 @@ The stream is composed by two parts:
 
 - A sub-stream for representing the program's signature (discrete feature) that is used in divergence detection. 
 
-The output stream is in the format described as follows. 
+The output stream is in one the two formats described as follows. 
 
+- The format for round-off error estimation only. 
 
 | **value index** | description | 
 | -------- | -------- | 
@@ -65,7 +66,16 @@ The output stream is in the format described as follows.
 | 1 | output representing value | 
 | ... | ... | 
 | N | output representing value |
-| N+1 | An integer M (converted to 128-bit floating-point number) which denotes that the following M numbers represent the program's signature (discrete feature). The following M numbers are used in floating-point divergence detection. | 
+
+- The format for divergence detection. 
+
+| **value index** | description | 
+| -------- | -------- | 
+| 0 | An integer N (but is converted to a 128-bit floating-point number) which denotes that the following N numbers represent the program's numerical output. The following N numbers are used in floating-point round-off error estimation. |
+| 1 | output representing value | 
+| ... | ... | 
+| N | output representing value |
+| N+1 | A **positive** integer M (converted to 128-bit floating-point number) which denotes that the following M numbers represent the program's signature (discrete feature). The following M numbers are used in floating-point divergence detection. | 
 | N+2 | signature representing value |
 | ... | ... |
 | N+1+M | signature representing value | 
