@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = s3fp$(EXEEXT)
+bin_PROGRAMS = s3fp$(EXEEXT) s3fp_it128$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -55,6 +55,15 @@ s3fp_DEPENDENCIES =
 s3fp_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(s3fp_LDFLAGS) $(LDFLAGS) -o $@
+am_s3fp_it128_OBJECTS = S3FP_ParseArgs.$(OBJEXT) \
+	S3FP_ErrorFunction.$(OBJEXT) S3FP_OutputParser.$(OBJEXT) \
+	S3FP_ErrorOptimization.$(OBJEXT) S3FP_SignatureGen.$(OBJEXT) \
+	S3FP_DifferentialContract.$(OBJEXT) S3FP_Core.$(OBJEXT)
+s3fp_it128_OBJECTS = $(am_s3fp_it128_OBJECTS)
+s3fp_it128_DEPENDENCIES =
+s3fp_it128_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(s3fp_it128_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -77,8 +86,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(s3fp_SOURCES)
-DIST_SOURCES = $(s3fp_SOURCES)
+SOURCES = $(s3fp_SOURCES) $(s3fp_it128_SOURCES)
+DIST_SOURCES = $(s3fp_SOURCES) $(s3fp_it128_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -295,6 +304,9 @@ clean-binPROGRAMS:
 s3fp$(EXEEXT): $(s3fp_OBJECTS) $(s3fp_DEPENDENCIES) $(EXTRA_s3fp_DEPENDENCIES) 
 	@rm -f s3fp$(EXEEXT)
 	$(s3fp_LINK) $(s3fp_OBJECTS) $(s3fp_LDADD) $(LIBS)
+s3fp_it128$(EXEEXT): $(s3fp_it128_OBJECTS) $(s3fp_it128_DEPENDENCIES) $(EXTRA_s3fp_it128_DEPENDENCIES) 
+	@rm -f s3fp_it128$(EXEEXT)
+	$(s3fp_it128_LINK) $(s3fp_it128_OBJECTS) $(s3fp_it128_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

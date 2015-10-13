@@ -289,7 +289,6 @@ void randCONF (CONF &ret_conf, unsigned int n_vars, bool plain) {
 
   if (ret_conf.size() != 0) ret_conf.clear();
   for (unsigned int vi = 0 ; vi < n_vars ; vi++) {
-    // cout << "Load Input Range [" << vi << "]" << endl;
     pair<HFP_TYPE, HFP_TYPE> var_range = varRange(vi, n_vars, irfile);
 
     if (plain == false) {
