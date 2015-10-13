@@ -69,27 +69,13 @@ int main (int argc, char *argv[]) {
 			UNIFORM_INPUTLB, 
 			UNIFORM_INPUTUB, 
 			INPUT_RANGE_FILE, 
-			DUMP_CONF_TO_ERRORS, 
-			CONF_TO_ERRORS_FILE, 
 			RANDOM_FUNC, 
 			CHECK_UNSTABLE_ERROR, 
 			AWBS_FIXED_INITIALA, 
 			AWBS_FIVESTAGE_ASSIST, 
 			UNSTABLE_ERROR_REPORT, 
-			N_INPUT_REPEATS, 
-			BACKUP_INPUT_TO_ERRORS, 
-			INPUT_TO_ERRORS_FILE, 
-			DUMP_ERRORS_STREAM, 
-			ERRORS_STREAM_FILE, 
-			EMT_BIFILE, 
-			EMT_PTYPE, 
-			EMT_MAXP, 
-			EMT_IN_ERR_OPT, 
-			EMT_IN_ERR_FUNC, 
-			EMT_OUT_ERR_OPT, 
-			EMT_OUT_ERR_FUNC, 
-			EMT_N_ROUNDS));
-
+			N_INPUT_REPEATS)); 
+  
   cout << "input bit-width: " << input_bitwidth << endl;
   cout << "n inputs: " << N_VARS << endl;
   cout << "input_name: " << INPUT_FILE_NAME << endl;
@@ -116,12 +102,8 @@ int main (int argc, char *argv[]) {
   if (CHECK_UNSTABLE_ERROR) {
     cout << "UNSTABLE_ERROR_REPORT: " << UNSTABLE_ERROR_REPORT << endl;
   }
-  if (DUMP_CONF_TO_ERRORS)
-    cout << "CONF_TO_ERRORS_FILE: " << CONF_TO_ERRORS_FILE << endl;
   if (N_INPUT_REPEATS > 1) 
     cout << "N_INPUT_REPEATS: " << N_INPUT_REPEATS << endl;
-  if (BACKUP_INPUT_TO_ERRORS) 
-    cout << "INPUT_TO_ERRORS_FILE: " << INPUT_TO_ERRORS_FILE << endl;
 
   cout << "=====================================" << endl;
 
@@ -132,40 +114,6 @@ int main (int argc, char *argv[]) {
 			     EXE_HP_NAME, OUTPUT_HP_NAME, 
 			     INPUT_FILE_NAME, 
 			     N_INPUT_REPEATS);
-
-  // ---- open conf-to-errors file ----
-  if (DUMP_CONF_TO_ERRORS) {
-    ost_conf_to_errors.open(CONF_TO_ERRORS_FILE.c_str());
-    assert(ost_conf_to_errors.is_open());
-  }
-
-  // ---- open input-to-errors file ---- 
-  if (BACKUP_INPUT_TO_ERRORS) {
-    stringstream lss;
-    stringstream gss;
-    lss << INPUT_TO_ERRORS_FILE << ".local";
-    gss << INPUT_TO_ERRORS_FILE << ".global";
-    file_input_to_errors_local = fopen(lss.str().c_str(), "w");
-    assert(file_input_to_errors_local != NULL);
-    file_input_to_errors_global = fopen(gss.str().c_str(), "w");
-    assert(file_input_to_errors_global != NULL);
-    unsigned int n_errors = 1;
-    unsigned int error_bitwidth = sizeof(HFP_TYPE) * 8;
-    fwrite(&input_bitwidth, sizeof(unsigned int), 1, file_input_to_errors_local);
-    fwrite(&input_bitwidth, sizeof(unsigned int), 1, file_input_to_errors_global);
-    fwrite(&N_VARS, sizeof(unsigned int), 1, file_input_to_errors_local);
-    fwrite(&N_VARS, sizeof(unsigned int), 1, file_input_to_errors_global);
-    fwrite(&error_bitwidth, sizeof(unsigned int), 1, file_input_to_errors_local);
-    fwrite(&error_bitwidth, sizeof(unsigned int), 1, file_input_to_errors_global);
-    fwrite(&n_errors, sizeof(unsigned int), 1, file_input_to_errors_local);
-    fwrite(&n_errors, sizeof(unsigned int), 1, file_input_to_errors_global);
-  }
-
-  // ---- open errors stream file ---- 
-  if (DUMP_ERRORS_STREAM) {
-    errors_stream = fopen(ERRORS_STREAM_FILE.c_str(), "w");
-    assert(errors_stream != NULL);
-  }
 
   // ---- open unstable error report (file) ----
   if (CHECK_UNSTABLE_ERROR) {
@@ -210,27 +158,10 @@ int main (int argc, char *argv[]) {
   case AWBS_RT_MODE: 
     rtAnalogWhiteBoxSampling (eva_basis, N_VARS); 
     break; 
-  case EMT_RT_MODE: 
-    rtErrorMagnificationTest (eva_basis, N_VARS); 
-    break; 
   default:
     assert(false && "ERROR: not supported RT mode\n");
     break;
   }
-
-  // ---- close conf-to-errors file 
-  if (DUMP_CONF_TO_ERRORS)
-    ost_conf_to_errors.close();
-
-  // ---- close input-to-errors file 
-  if (BACKUP_INPUT_TO_ERRORS) {
-    fclose(file_input_to_errors_local);
-    fclose(file_input_to_errors_global);
-  }
-
-  // ---- close errors stream file 
-  if (DUMP_ERRORS_STREAM) 
-    fclose(errors_stream); 
 
   // ---- close unstalbe errro report 
   if (CHECK_UNSTABLE_ERROR)
@@ -358,6 +289,7 @@ void randCONF (CONF &ret_conf, unsigned int n_vars, bool plain) {
 
   if (ret_conf.size() != 0) ret_conf.clear();
   for (unsigned int vi = 0 ; vi < n_vars ; vi++) {
+    // cout << "Load Input Range [" << vi << "]" << endl;
     pair<HFP_TYPE, HFP_TYPE> var_range = varRange(vi, n_vars, irfile);
 
     if (plain == false) {
@@ -677,14 +609,6 @@ UpdateRTReport (EvaluationBasis eva_basis,
     ERROR_SUM += (ret_fperr >= 0 ? ret_fperr : ((-1)*ret_fperr)); 
     ERROR_SUM_2 += (ret_fperr * ret_fperr);
 
-    if (DUMP_ERRORS_STREAM) {
-      // __float128 fperr_to_errors_stream = (__float128) fperr; 
-      __float128 fperr_to_errors_stream = (__float128) (ret_fperr >= 0 ? 
-							ret_fperr : 
-							((-1)*ret_fperr)); 
-      fwrite(&fperr_to_errors_stream, sizeof(__float128), 1, errors_stream);
-    }
-
     return beat_global_best_conf;      
   }
 
@@ -750,22 +674,7 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
       }
       
       string my_inputname = eva_basis.getInputname();
-      
-      if (BACKUP_INPUT_TO_ERRORS) {
-	dumpInputOfInputToErrors(file_input_to_errors_local, my_inputname, 
-				 eva_basis.getNInputs(), 
-				 true, 
-				 eva_basis.getInputBitwidth());
-	dumpErrorOfInputToErrors(file_input_to_errors_local, ret_fperr);
-	if (update_global_best_conf) {
-	  dumpInputOfInputToErrors(file_input_to_errors_global, my_inputname, 
-				   eva_basis.getNInputs(), 
-				   true, 
-				   eva_basis.getInputBitwidth());
-	  dumpErrorOfInputToErrors(file_input_to_errors_global, ret_fperr);
-	}
-      }
-      
+            
       if (update_global_best_conf) {
 	GLOBAL_BEST_CONF = conf;
 	N_GLOBAL_UPDATES++; 	
@@ -773,12 +682,6 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
     }
   }
 
-  if (DUMP_CONF_TO_ERRORS) {
-    vector<FPR> rels;
-    rels.push_back(local_best.best_error);
-    dumpCONFtoErrors(ost_conf_to_errors, conf, rels);
-  }
-  
   return local_best;
 }
 
@@ -967,8 +870,6 @@ void reportResult (const char *tname) {
     cout << "HALT EARLY: time : " << (tend - TSTART) << endl;
   }
   GLOBAL_BEST.dumpToStdout();   
-  if (DUMP_CONF_TO_ERRORS) 
-    GLOBAL_BEST.dumpToOStream(ost_conf_to_errors);
   GLOBAL_BEST.dumpBestInputToFile (BEST_INPUT_FILE_NAME_LB, ID_LB);
   GLOBAL_BEST.dumpBestInputToFile (BEST_INPUT_FILE_NAME_UB, ID_UB);
 
@@ -1659,102 +1560,4 @@ void inputPerturbation (vector<INPUTV_TYPE> base_input,
   assert(base_input.size() == pert_input.size()); 
 }
 
-void errorMagnificationTest (EvaluationBasis eva_basis, 
-			     vector<INPUTV_TYPE> pert_input, 
-			     vector<INPUTV_TYPE> base_input, 
-			     ENUM_ERR_OPT input_err_opt, 
-			     ENUM_ERR_FUNC input_err_func, 
-			     ENUM_ERR_OPT output_err_opt, 
-			     ENUM_ERR_FUNC output_err_func, 
-			     vector<HFP_TYPE> &err_istate, 
-			     vector<HFP_TYPE> &err_ostate) {
-  assert(err_istate.size() == err_ostate.size()); 
-
-  // make input states 
-  vector<HFP_TYPE> base_istate; 
-  vector<HFP_TYPE> pert_istate; 
-  assert(base_input.size() == pert_input.size()); 
-  for (unsigned int i = 0 ; i < base_input.size() ; i++) {
-    base_istate.push_back(base_input[i]); 
-    pert_istate.push_back(pert_input[i]); 
-  }
-  
-  // calculate error on input states 
-  Erropt_CalculateError(pert_istate, 
-			base_istate, 
-			input_err_opt, 
-			input_err_func, 
-			REL_DELTA, 
-			err_istate); 
-
-  // execute programs 
-  int lperr, hperr; 
-  vector<HFP_TYPE> pert_ostate; 
-  vector<HFP_TYPE> base_ostate; 
-  eva_basis.prepareInput(pert_input, "w"); 
-  system("cp random_input emt-pert-input"); 
-  eva_basis.runLP(&lperr, pert_ostate); 
-  eva_basis.prepareInput(base_input, "w"); 
-  system("cp random_input emt-base-input"); 
-  eva_basis.runHP(&hperr, base_ostate);   
-  
-
-  // calculate error on ouput states 
-  Erropt_CalculateError(pert_ostate, 
-			base_ostate, 
-			output_err_opt, 
-			output_err_func, 
-			REL_DELTA, 
-			err_ostate); 
-}
-
-void errorMagnificationTest (EvaluationBasis eva_basis, 
-			     vector<INPUTV_TYPE> base_input, 
-			     string pert_type, 
-			     HFP_TYPE max_pert, 
-			     ENUM_ERR_OPT input_err_opt, 
-			     ENUM_ERR_FUNC input_err_func, 
-			     ENUM_ERR_OPT output_err_opt, 
-			     ENUM_ERR_FUNC output_err_func, 
-			     unsigned int n_tests) {
-  assert(max_pert >= 0); 
-
-  for (unsigned int t = 0 ; t < n_tests ; t++) {
-    vector<INPUTV_TYPE> pert_input; 
-
-    // perturb input 
-    inputPerturbation(base_input, pert_input, 
-		      pert_type, max_pert); 
-   
-    // check errors 
-    vector<HFP_TYPE> err_istate; 
-    vector<HFP_TYPE> err_ostate; 
-    errorMagnificationTest (eva_basis, 
-			    pert_input, base_input, 
-			    input_err_opt, input_err_func, 
-			    output_err_opt, output_err_func, 
-			    err_istate, err_ostate); 
-
-    assert(err_istate.size() > 0); 
-    assert(err_ostate.size() > 0); 
-    cout << "EMT[" << t << "]: " << endl;
-    cout << "    err(in-state)  : " << (CONSOLE_OUTPUT_TYPE) err_istate[0] << endl;
-    cout << "    err(out-state) : " << (CONSOLE_OUTPUT_TYPE) err_ostate[0] << endl;
-  }
-}
-
-void rtErrorMagnificationTest (EvaluationBasis eva_basis, 
-			       unsigned int n_vars) {
-  // get input values 
-  vector<INPUTV_TYPE> base_input; 
-  eva_basis.getInputValues(base_input, N_INPUT_REPEATS, EMT_BIFILE); 
-
-  errorMagnificationTest (eva_basis, 
-			  base_input, 
-			  EMT_PTYPE, 
-			  EMT_MAXP, 
-			  EMT_IN_ERR_OPT, EMT_IN_ERR_FUNC, 
-			  EMT_OUT_ERR_OPT, EMT_OUT_ERR_FUNC, 
-			  EMT_N_ROUNDS); 
-}
 // ======== end of error magnification Test ========

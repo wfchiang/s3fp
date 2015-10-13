@@ -199,6 +199,8 @@ enum ENUM_RANDOM_FUNC {
 }; 
 #endif 
 
+bool testtesttest (); 
+
 
 string getOPTOBJSString (ENUM_OPT_OBJS opt_objs); 
 
@@ -228,23 +230,9 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
 		     HFP_TYPE &uniform_inputlb, 
 		     HFP_TYPE &uniform_inputub, 
 		     string &input_range_file, 
-		     bool &dump_conf_to_errors, 
-		     string &conf_to_errors_file, 
 		     ENUM_RANDOM_FUNC &random_func, 
 		     bool &check_unstable_error, 
 		     bool &awbs_fixed_initialA, 
 		     bool &awbs_fivestage_assist, 
 		     string &unstable_error_report, 
-		     unsigned int &n_input_repeats,
-		     bool &backup_input_to_errors, 
-		     string &input_to_errors_file, 
-		     bool &dump_errors_stream, 
-		     string &errors_stream_file, 
-		     string &emtest_base_input_file, 
-		     string &emtest_pert_type, 
-		     HFP_TYPE &emtest_max_pert, 
-		     ENUM_ERR_OPT &emtest_in_err_opt, 
-		     ENUM_ERR_FUNC &emtest_in_err_func, 
-		     ENUM_ERR_OPT &emtest_out_err_opt, 
-		     ENUM_ERR_FUNC &emtest_out_err_func, 
-		     unsigned int &emtest_n_rounds); 
+		     unsigned int &n_input_repeats); 

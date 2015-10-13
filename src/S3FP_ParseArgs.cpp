@@ -148,7 +148,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
 		     ENUM_ERR_FUNC &err_func, 
 		     ENUM_SIG_FUNC &sig_func, 
 		     ENUM_SIG_FUNC &diff_con, 
-		     ENUM_SIG_FUNC &ext_con, 
 		     ENUM_OPT_REPRESENT &opt_represent, 
 		     ENUM_OPT_RANGE &opt_range, 
 		     HFP_TYPE &rel_delta,
@@ -156,26 +155,12 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
 		     HFP_TYPE &uniform_inputlb, 
 		     HFP_TYPE &uniform_inputub, 
 		     string &input_range_file, 
-		     bool &dump_conf_to_errors, 
-		     string &conf_to_errors_file, 
 		     ENUM_RANDOM_FUNC &random_func, 
 		     bool &check_unstable_error, 
 		     bool &awbs_fixed_initialA, 
 		     bool &awbs_fivestage_assist, 
 		     string &unstable_error_report, 
-		     unsigned int &n_input_repeats,
-		     bool &backup_input_to_errors, 
-		     string &input_to_errors_file, 
-		     bool &dump_errors_stream, 
-		     string &errors_stream_file, 
-		     string &emtest_base_input_file, 
-		     string &emtest_pert_type, 
-		     HFP_TYPE &emtest_max_pert, 
-		     ENUM_ERR_OPT &emtest_in_err_opt, 
-		     ENUM_ERR_FUNC &emtest_in_err_func, 
-		     ENUM_ERR_OPT &emtest_out_err_opt, 
-		     ENUM_ERR_FUNC &emtest_out_err_func, 
-		     unsigned int &emtest_n_rounds) {
+		     unsigned int &n_input_repeats) {
 
   bool has_n_vars = false; 
   bool has_input_file_name = false; 
@@ -191,14 +176,12 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
   bool has_err_func = false; 
   bool has_sig_func = false; 
   bool has_diff_con = false; 
-  bool has_ext_con = false; 
   bool has_opt_represent = false;
   bool has_opt_range = false;
   bool has_uniform_input = false;
   bool has_uniform_inputlb = false;
   bool has_uniform_inputub = false;
   bool has_input_range_file = false;
-  bool has_conf_to_errors_file = false;
   bool has_rel_delta = false;
   bool has_random_func = false; 
   bool has_check_unstable_error = false;
@@ -207,16 +190,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
   bool has_awbs_fivestage_assist = true; 
   bool has_unstable_error_report = false;
   bool has_n_input_repeats = false;
-  bool has_backup_input_to_errors = false;
-  bool has_dump_errors_stream = false;
-  bool has_emtest_base_input_file = false; 
-  bool has_emtest_pert_type = false; 
-  bool has_emtest_max_pert = false; 
-  bool has_emtest_in_err_opt = false; 
-  bool has_emtest_in_err_func = false; 
-  bool has_emtest_out_err_opt = false; 
-  bool has_emtest_out_err_func = false; 
-  bool has_emtest_n_rounds = false; 
 
   ifstream sfile (SETTING_FNAME); 
 
@@ -246,7 +219,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       else if (svalue.compare("ROBUST_EST") == 0) rt_mode = ROBUST_EST_RT_MODE; 
       else if (svalue.compare("UROBUST_CHECK") == 0) rt_mode = UROBUST_CHECK_RT_MODE; 
       else if (svalue.compare("ABS") || svalue.compare("AWBS") == 0) rt_mode = AWBS_RT_MODE; 
-      else if (svalue.compare("EMT") == 0) rt_mode = EMT_RT_MODE; 
       else assert(false);
       has_rt_mode = true;
     }
@@ -294,14 +266,9 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       sig_func = stringToSigfunc(svalue); 
       has_sig_func = true; 
     }
-    // else if (sname.compare("DIFF_CON") == 0) {
     else if (sname.compare("DIV_FUNC") == 0) {
       diff_con = stringToSigfunc(svalue); 
       has_diff_con = true; 
-    }
-    else if (sname.compare("EXT_CON") == 0) {
-      ext_con = stringToSigfunc(svalue); 
-      has_ext_con = true; 
     }
     else if (sname.compare("OPT_REPRESENT") == 0) {
       if (svalue.compare("UB") == 0 || 
@@ -343,11 +310,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       input_range_file = svalue; 
       has_input_range_file = true;
     }
-    else if (sname.compare("CONF_TO_ERRORS_FILE") == 0) {
-      conf_to_errors_file = svalue;
-      has_conf_to_errors_file = true;
-      dump_conf_to_errors = true;
-    }
     else if (sname.compare("RANDOM_FUNC") == 0) {
       if (svalue.compare("NAIVE") == 0) random_func = NAIVE_RANDOM_FUNC; 
       else random_func = NAIVE_RANDOM_FUNC;
@@ -377,52 +339,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     else if (sname.compare("N_INPUT_REPEATS") == 0) {
       n_input_repeats = atoi(svalue.c_str());
       has_n_input_repeats = true;
-    }
-    else if (sname.compare("INPUT_TO_ERRORS_FILE") == 0) {
-      input_to_errors_file = svalue; 
-      has_backup_input_to_errors = true;
-      backup_input_to_errors = true;
-    }
-    else if (sname.compare("ERRORS_STREAM_FILE") == 0) {
-      errors_stream_file = svalue;
-      has_dump_errors_stream = true;
-      dump_errors_stream = true;
-    }
-    else if (sname.compare("EMT_BIFILE") == 0) {
-      emtest_base_input_file = svalue; 
-      has_emtest_base_input_file = true; 
-    }
-    else if (sname.compare("EMT_PTYPE") == 0) {
-      emtest_pert_type = svalue; 
-      has_emtest_pert_type = true; 
-    }
-    else if (sname.compare("EMT_MAXP") == 0) {
-      emtest_max_pert = (HFP_TYPE) atof(svalue.c_str()); 
-      has_emtest_max_pert = true; 
-    }
-    else if (sname.compare("EMT_IN_ERR_OPT") == 0) {
-      emtest_in_err_opt = stringToErropt(svalue); 
-      assert(emtest_in_err_opt != NA_ERR_OPT); 
-      has_emtest_in_err_opt = true; 
-    }
-    else if (sname.compare("EMT_IN_ERR_FUNC") == 0) {
-      emtest_in_err_func = stringToErrfunc(svalue); 
-      assert(emtest_in_err_func != NA_ERR_FUNC); 
-      has_emtest_in_err_func = true; 
-    }
-    else if (sname.compare("EMT_OUT_ERR_OPT") == 0) {
-      emtest_out_err_opt = stringToErropt(svalue); 
-      assert(emtest_out_err_opt != NA_ERR_OPT); 
-      has_emtest_out_err_opt = true; 
-    }
-    else if (sname.compare("EMT_OUT_ERR_FUNC") == 0) {
-      emtest_out_err_func = stringToErrfunc(svalue); 
-      assert(emtest_out_err_func != NA_ERR_FUNC); 
-      has_emtest_out_err_func = true; 
-    }
-    else if (sname.compare("EMT_N_ROUNDS") == 0) {
-      emtest_n_rounds = atoi(svalue.c_str()); 
-      has_emtest_n_rounds;
     }
     else {
       cerr << "[ERROR] Unknown setting name: " << sname << endl;
@@ -489,18 +405,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     cout << "[ERROR] Missing Specification of Using Uniform Input (boolean)" << endl;    
     assert(has_uniform_input);  
   }
-  if (!((has_emtest_base_input_file && has_emtest_pert_type && has_emtest_max_pert && has_emtest_in_err_opt && has_emtest_in_err_func && has_emtest_out_err_opt && has_emtest_out_err_func) || 
-	(!has_emtest_base_input_file && !has_emtest_pert_type && !has_emtest_max_pert && !has_emtest_in_err_opt && !has_emtest_in_err_func && !has_emtest_out_err_opt && !has_emtest_out_err_func))) {
-    cout << "[ERROR] Invalid setting of Error Magnification Test" << endl;
-    assert(((has_emtest_base_input_file && has_emtest_pert_type && has_emtest_max_pert && has_emtest_in_err_opt && has_emtest_in_err_func && has_emtest_out_err_opt && has_emtest_out_err_func) || 
-	    (!has_emtest_base_input_file && !has_emtest_pert_type && !has_emtest_max_pert && !has_emtest_in_err_opt && !has_emtest_in_err_func && !has_emtest_out_err_opt && !has_emtest_out_err_func)));
-  }
-  if (!(!has_emtest_base_input_file || 
-	emtest_base_input_file.compare(input_file_name) != 0)) {
-    cout << "[ERROR] Cannot assigne EMT_BIFILE and INPUT_FILE as the same (" << emtest_base_input_file << " vs " << input_file_name << ")" << endl;
-    assert(!has_emtest_base_input_file || 
-	   emtest_base_input_file.compare(input_file_name) != 0); 
-  }
   if (aImpliesB(uniform_input, has_uniform_inputlb) == false) {
     cout << "[ERROR] Missing Specification of Uniform Lower Bound" << endl;    
     assert(aImpliesB(uniform_input, has_uniform_inputlb));
@@ -513,10 +417,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     cout << "[ERROR] Missing Specification of Input Range File" << endl;    
     assert(aImpliesB(uniform_input==false, has_input_range_file));
   }
-  if (has_conf_to_errors_file == false) 
-    dump_conf_to_errors = false;
-  if (has_backup_input_to_errors == false) 
-    backup_input_to_errors = false;
 
   if (rt_mode == NA_RT_MODE) { 
     cout << "[ERROR] Bad Specification of RT Mode" << endl;
@@ -541,10 +441,6 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     assert(has_diff_con); 
     assert(has_unstable_error_report);
   }
-  if (has_diff_con && (!has_ext_con)) {
-    ext_con = diff_con; 
-  }
-
 
   return true;
 }

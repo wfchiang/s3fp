@@ -50,24 +50,12 @@ string INPUT_RANGE_FILE;
 HFP_TYPE UNIFORM_INPUTLB = 0.0;
 // the upper bound of uniform input range 
 HFP_TYPE UNIFORM_INPUTUB = 0.0; 
-// indicate dumpping conf. -> error or not 
-bool DUMP_CONF_TO_ERRORS = false; 
-// the file name of conf. -> error 
-string CONF_TO_ERRORS_FILE = "";
 // indicate checking unstable error or not 
 bool CHECK_UNSTABLE_ERROR = false;
 // the file name for reporting unstable error testing result 
 string UNSTABLE_ERROR_REPORT = ""; 
 // # of inputs repeated in the (generated) input file 
 unsigned int N_INPUT_REPEATS = 1;
-// indicate backing up input -> error or not 
-bool BACKUP_INPUT_TO_ERRORS = false;
-// file name for input -> error 
-string INPUT_TO_ERRORS_FILE = ""; 
-// indicate dumpping error stream (all detected errors) or not 
-bool DUMP_ERRORS_STREAM = false;
-// file name for the error stream 
-string ERRORS_STREAM_FILE = "";
 // the type for floating-point number shown in (console) output 
 #define CONSOLE_OUTPUT_TYPE long double
 // file name for recording the input which triggers the error upper bound 
@@ -82,17 +70,6 @@ string ERRORS_STREAM_FILE = "";
 #ifndef UNSTABLE_INPUT_FILE_NAME 
 #define UNSTABLE_INPUT_FILE_NAME "unstable_input" 
 #endif 
-// error magnification test: base input file name 
-string EMT_BIFILE; 
-// error magnification test: perturbation type 
-string EMT_PTYPE; 
-// error magnification test: maximum perturbation 
-HFP_TYPE EMT_MAXP = -1.0; 
-// error magnification test: IO error estimation 
-ENUM_ERR_OPT EMT_IN_ERR_OPT, EMT_OUT_ERR_OPT; 
-ENUM_ERR_FUNC EMT_IN_ERR_FUNC, EMT_OUT_ERR_FUNC; 
-// error magnification test: # rounds 
-unsigned int EMT_N_ROUNDS = 1; 
 // random number function 
 ENUM_RANDOM_FUNC RANDOM_FUNC = NAIVE_RANDOM_FUNC; 
 /*
