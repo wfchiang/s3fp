@@ -319,16 +319,12 @@ unsigned int N_GLOBAL_UPDATES = 0;
 RTReport local_best;
 // out stream for conf. -> errors 
 ofstream ost_conf_to_errors; 
-// output file for input -> local errors 
-FILE *file_input_to_errors_local;
-// output file for input -> global errors 
-FILE *file_input_to_errors_global;
 // indicate whether an unstable error been detected or not (halt immediately when an unstable error is detected) 
 bool HALT_NOW;
 // output file for unstable error report 
 FILE *unstable_report; 
-// output file for error stream 
-FILE *errors_stream; 
+// a switch of the back-door of using the external input 
+bool backdoor_use_external_input = false; 
 
 
 // ==== global variables for parallel random testing ==== 

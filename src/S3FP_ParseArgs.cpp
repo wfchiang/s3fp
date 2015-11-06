@@ -160,7 +160,8 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
 		     bool &awbs_fixed_initialA, 
 		     bool &awbs_fivestage_assist, 
 		     string &unstable_error_report, 
-		     unsigned int &n_input_repeats) {
+		     unsigned int &n_input_repeats, 
+		     bool &backdoor_use_external_input) {
 
   bool has_n_vars = false; 
   bool has_input_file_name = false; 
@@ -190,6 +191,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
   bool has_awbs_fivestage_assist = true; 
   bool has_unstable_error_report = false;
   bool has_n_input_repeats = false;
+  bool has_backdoor_use_external_input = false; 
 
   ifstream sfile (SETTING_FNAME); 
 
@@ -340,6 +342,10 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       n_input_repeats = atoi(svalue.c_str());
       has_n_input_repeats = true;
     }
+    else if (sname.compare("BACKDOOR_USE_EXTERNAL_INPUT") == 0) {
+      if (svalue.compare("true") == 0) backdoor_use_external_input = true; 
+      has_backdoor_use_external_input = true; 
+    }
     else {
       cerr << "[ERROR] Unknown setting name: " << sname << endl;
       assert(false); 
@@ -440,6 +446,10 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     assert(has_sig_func); 
     assert(has_diff_con); 
     assert(has_unstable_error_report);
+  }
+  if ((!has_backdoor_use_external_input) || ((timeout == 1) && (t_resource == SVE_TRESOURCE))) {
+    cout << "[ERROR] Invalid conditions of using BACKDOOR_USE_EXTERNAL_INPUT" << endl;
+    assert(false); 
   }
 
   return true;

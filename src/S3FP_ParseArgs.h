@@ -235,4 +235,5 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
 		     bool &awbs_fixed_initialA, 
 		     bool &awbs_fivestage_assist, 
 		     string &unstable_error_report, 
-		     unsigned int &n_input_repeats); 
+		     unsigned int &n_input_repeats, 
+		     bool &backdoor_use_external_input); 

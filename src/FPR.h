@@ -62,7 +62,6 @@ void sampleCONF (const string &outname,
     HFP_TYPE this_lb = conf[vi].second.getLB(); 
     HFP_TYPE this_ub = conf[vi].second.getUB(); 
     INPUTV_TYPE this_input = (INPUTV_TYPE) random128(this_lb, this_ub, rfunc); 
-
     fwrite(&this_input, sizeof(INPUTV_TYPE), 1, outfile); 
   }
 

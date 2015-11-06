@@ -43,11 +43,9 @@ void rtAnalogWhiteBoxSampling (EvaluationBasis eva_basis, unsigned int n_vars);
 */
 int main (int argc, char *argv[]) {
   unsigned int i;
-  unsigned int input_bitwidth = 32; 
 
   cout << "==== S3FP arguments and settings ====" << endl;
 
-  assert(input_bitwidth == 32); 
   assert(S3FP_ParseArgs(N_VARS, 
 			INPUT_FILE_NAME, 
 			RT_MODE, 
@@ -74,9 +72,10 @@ int main (int argc, char *argv[]) {
 			AWBS_FIXED_INITIALA, 
 			AWBS_FIVESTAGE_ASSIST, 
 			UNSTABLE_ERROR_REPORT, 
-			N_INPUT_REPEATS)); 
+			N_INPUT_REPEATS, 
+			backdoor_use_external_input)); 
   
-  cout << "input bit-width: " << input_bitwidth << endl;
+  cout << "input bit-width: " << sizeof(INPUTV_TYPE) << " bytes" << endl;
   cout << "n inputs: " << N_VARS << endl;
   cout << "input_name: " << INPUT_FILE_NAME << endl;
   cout << "LP EXE: " << EXE_LP_NAME << " -> " << OUTPUT_LP_NAME << endl;
@@ -109,7 +108,6 @@ int main (int argc, char *argv[]) {
 
   // ---- initialize evaluation basis ----
   EvaluationBasis eva_basis (N_VARS, 
-			     input_bitwidth, 
 			     EXE_LP_NAME, OUTPUT_LP_NAME, 
 			     EXE_HP_NAME, OUTPUT_HP_NAME, 
 			     INPUT_FILE_NAME, 
@@ -348,53 +346,6 @@ void neighborCONFs (vector<CONF> &ret_confs, CONF this_conf, bool just_rand_one)
 }
 
 
-void dumpInputOfInputToErrors (FILE *outfile, string inname, unsigned long n_inputs, bool lower_input_bitwidth, unsigned int input_bitwidth) {
-  if (lower_input_bitwidth) 
-    assert(input_bitwidth == 32 || input_bitwidth == 64); 
-  assert(outfile != NULL);
-
-  FILE *infile = fopen(inname.c_str(), "r");
-  assert(infile != NULL); 
-  for (unsigned int ii = 0 ; ii < n_inputs ; ii++) {
-    HFP_TYPE idata;
-    fread(&idata, sizeof(HFP_TYPE), 1, infile);
-    if (lower_input_bitwidth && (input_bitwidth == 32)) {
-      float odata = (float)idata;
-      fwrite(&odata, sizeof(float), 1, outfile);
-    }
-    else if (lower_input_bitwidth && (input_bitwidth == 64)) {
-      double odata = (double) idata;
-      fwrite(&odata, sizeof(double), 1, outfile);
-    }    
-    else 
-      fwrite(&idata, sizeof(HFP_TYPE), 1, outfile);
-  }
-  fclose(infile);
-}
-
-
-inline
-void dumpErrorOfInputToErrors (FILE *outfile, HFP_TYPE fperr) {
-  assert(outfile != NULL);
-  fwrite(&fperr, sizeof(HFP_TYPE), 1, outfile);
-} 
-
-
-void dumpCONFtoErrors (ostream &ost, CONF conf, vector<FPR> rels) {
-  unsigned int n_ivs = conf.size(); 
-  unsigned int n_ovs = rels.size(); 
-
-  for (unsigned int ii = 0 ; ii < n_ivs ; ii++) 
-    ost << "input " << ii << " [" << (CONSOLE_OUTPUT_TYPE) conf[ii].second.getLB() << ", " << (CONSOLE_OUTPUT_TYPE) conf[ii].second.getUB() << "]" << endl;
-  
-  for (unsigned int oi = 0 ; oi < n_ovs ; oi++) 
-    ost << "output " << oi << " [" << (CONSOLE_OUTPUT_TYPE) rels[oi].getLB() << ", " << (CONSOLE_OUTPUT_TYPE) rels[oi].getUB() << "]" << endl;
-
-  ost << endl;
-}
-
-
-
 /**
  * Computes the ulp error of two floating-point numbers.
  * The parameter p specifies the intended precision of floating-point numbers:
@@ -554,8 +505,7 @@ bool
 UpdateRTReport (EvaluationBasis eva_basis, 
 		vector<HFP_TYPE> vLPs, vector<HFP_TYPE> vHPs, 
 		const char *input_filename, 
-		HFP_TYPE &ret_fperr, 
-		int lp_bitwidth) {
+		HFP_TYPE &ret_fperr) { 
   vector<HFP_TYPE> fperrs; 
   unsigned int n_outputs = vLPs.size();
 
@@ -668,8 +618,7 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
 	  UpdateRTReport (eva_basis, 
 			  this_vLPs, this_vHPs, 
 			  eva_basis.getInputname().c_str(), 
-			  ret_fperr, 
-			  eva_basis.getInputBitwidth());
+			  ret_fperr); 
       }
       
       string my_inputname = eva_basis.getInputname();
@@ -1111,8 +1060,7 @@ void runOpt4jInput (EvaluationBasis eva_basis, unsigned int n_vars, const char *
   updated_global = UpdateRTReport(eva_basis, 
 				  lp_outputs, hp_outputs, 
 				  iname, 
-				  ret_fperr, 
-				  32);
+				  ret_fperr); 
 }
 
 void rtOpt4j (EvaluationBasis eva_basis, unsigned int n_vars) {

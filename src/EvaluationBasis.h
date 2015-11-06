@@ -59,7 +59,6 @@ void ExtractEEstSigValues (vector<HFP_TYPE> poutputs,
 class EvaluationBasis {
  private:
   unsigned int n_inputs; 
-  unsigned int input_bitwidth; 
   string exeLP;
   string outnameLP;
   string exeHP;
@@ -117,22 +116,18 @@ class EvaluationBasis {
 
  public:
   EvaluationBasis () {
-    input_bitwidth = 0;
   }
 
   EvaluationBasis (unsigned int in_n_inputs, 
-		   unsigned int in_input_bitwidth, 
 		   const string &in_exeLP, 
 		   const string &in_outnameLP, 
 		   const string &in_exeHP, 
 		   const string &in_outnameHP, 
 		   const string &in_inputname,
 		   unsigned int in_n_input_repeats) {
-    assert (in_input_bitwidth == 32 || in_input_bitwidth == 64 || in_input_bitwidth == 128);
     assert (in_n_input_repeats >= 1);
 
     n_inputs = in_n_inputs;
-    input_bitwidth = in_input_bitwidth; 
     exeLP = in_exeLP;
     outnameLP = in_outnameLP;
     exeHP = in_exeHP;
@@ -143,7 +138,6 @@ class EvaluationBasis {
 
   EvaluationBasis &operator = (const EvaluationBasis &rhs) {
     n_inputs = rhs.n_inputs;
-    input_bitwidth = rhs.input_bitwidth; 
 
     exeLP = rhs.exeLP;
     outnameLP = rhs.outnameLP;
@@ -248,8 +242,6 @@ class EvaluationBasis {
   unsigned int getNInputRepeats() { return n_input_repeats; }
 
   unsigned int getNInputs() { return n_inputs; }
-
-  unsigned int getInputBitwidth () { return input_bitwidth; }
 
   string getExeLP() { return exeLP; }
   string getExeHP() { return exeHP; }
