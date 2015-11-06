@@ -447,7 +447,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
     assert(has_diff_con); 
     assert(has_unstable_error_report);
   }
-  if ((!has_backdoor_use_external_input) || ((timeout == 1) && (t_resource == SVE_TRESOURCE))) {
+  if (!((!has_backdoor_use_external_input) || ((timeout == 1) && (t_resource == SVE_TRESOURCE)))) {
     cout << "[ERROR] Invalid conditions of using BACKDOOR_USE_EXTERNAL_INPUT" << endl;
     assert(false); 
   }
