@@ -578,9 +578,11 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
        (n < N || N==0) && (HALT_NOW == false) ; 
        n = n + eva_basis.getNInputRepeats()) {
     // generate input file 
-    eva_basis.prepareInput(conf, 
-			   RANDOM_FUNC, 
-			   false); 
+    if (backdoor_use_external_input) ; 
+    else
+      eva_basis.prepareInput(conf, 
+			     RANDOM_FUNC, 
+			     false); 
 
     vector<HFP_TYPE> vLPs;
     vector<HFP_TYPE> vHPs;
@@ -1049,6 +1051,7 @@ void runOpt4jInput (EvaluationBasis eva_basis, unsigned int n_vars, const char *
   }
   fclose(infile); 
 
+  assert(!backdoor_use_external_input); 
   eva_basis.prepareInput(this_conf); 
   
   lp_outputs.clear(); hp_outputs.clear(); 
@@ -1158,6 +1161,7 @@ void uniformRobustnessCheck (EvaluationBasis eva_basis, unsigned int n_vars) {
   while (!TerminationCriterion(TSTART)) {    lp_outputs.clear(); 
     hp_outputs.clear(); 
     
+    assert(!backdoor_use_external_input); 
     eva_basis.prepareInput(init_conf); 
 
     eva_basis.runLP(&lperr, lp_outputs); 
@@ -1203,6 +1207,7 @@ typedef pair< pair<vector<INPUTV_TYPE>, vector<HFP_TYPE> >, pair<vector<INPUTV_T
 bool analogWhiteBoxSampling (EvaluationBasis eva_basis, 
 			     unsigned int n_vars) {
   assert(N_INPUT_REPEATS == 1); 
+  assert(!backdoor_use_external_input); 
 
   CONF plain_conf; randCONF(plain_conf, n_vars, true);
   vector<AWBS_EDGE> sampling_edges; 

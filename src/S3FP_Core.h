@@ -80,6 +80,11 @@ bool AWBS_FIXED_INITIALA = false;
 bool AWBS_FIVESTAGE_ASSIST = false; 
 string BACKUP_DIV_INPUT_FILE_NAME = "backup_div_input_file"; 
 HFP_TYPE SORTING_DIV_THRESHOLD = -1; 
+/*
+  back-door(s)
+*/
+// a switch of the back-door of using the external input 
+bool backdoor_use_external_input = false; 
 
 
 /* 
@@ -323,8 +328,6 @@ ofstream ost_conf_to_errors;
 bool HALT_NOW;
 // output file for unstable error report 
 FILE *unstable_report; 
-// a switch of the back-door of using the external input 
-bool backdoor_use_external_input = false; 
 
 
 // ==== global variables for parallel random testing ==== 
