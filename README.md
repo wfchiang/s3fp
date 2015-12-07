@@ -170,6 +170,10 @@ The default value is 0.
 
 - **SIG_FUNC**: the function that check the differential contract, which is 
 **SIG_FUNC(Float's discrete results) == SIG_FUNC(Real's discrete results)**. 
+    * **SINGLE_INT**: the signature should be a single integer. 
+    * **SINGLE_UINT**: the signature should be a single **unsigned** integer. 
+    * **LAST_INT**: the signature is a list of integers. But the list is projected to a single integer which is the last value of the list. 
+    * **LAST_UINT**: the signature is a list of integers. But the list is projected to a single **unsigned** integer which is the last value of the list. 
 
 - **DIV_FUNC**: the function that check divergence based on the program's discrete results. 
-Again, at this point, we rely on programmers to export **useful** discrete results to S3FP such that S3FP can judge differential contract (the consistency between Float's and Real's signatures) and divergence by only observing the discrete results (from both Float and Real). 
+Again, at this point, we rely on programmers to export **useful** discrete results to S3FP such that S3FP can judge differential contract (the consistency between Float's and Real's signatures) and divergence by only observing the discrete results (from both Float and Real). The value of DIV_FUNC should be one of the candidate of SIG_FUNC. 
