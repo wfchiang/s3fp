@@ -1,2 +1,2 @@
 
-SUBDIRS = balanced-reduction
+SUBDIRS = balanced-reduction imbalanced-reduction 

@@ -12,6 +12,7 @@ examples/lib/Makefile
 examples/lib/div_geometric_primitives/Makefile 
 examples/tests-fp-error/Makefile 
 examples/tests-fp-error/balanced-reduction/Makefile
+examples/tests-fp-error/imbalanced-reduction/Makefile
 examples/tests-div-detection/Makefile 
 examples/tests-div-detection/pp_3x3/Makefile 
 examples/tests-div-detection/pp_4x4/Makefile)
