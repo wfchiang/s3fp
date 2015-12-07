@@ -1,5 +1,5 @@
 
-SUBDIRS = lib tests-div-detection
+SUBDIRS = lib tests-fp-error tests-div-detection
 
 # compilation flags 
 AM_CPPFLAGS = -std=c++0x -Wunused-result -O0
