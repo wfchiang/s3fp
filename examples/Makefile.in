@@ -203,7 +203,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = lib tests-div-detection
+SUBDIRS = lib tests-fp-error tests-div-detection
 
 # compilation flags 
 AM_CPPFLAGS = -std=c++0x -Wunused-result -O0
