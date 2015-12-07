@@ -4,7 +4,7 @@
 AC_PREREQ([2.68])
 AC_INIT(s3fp, 0.1, wfchiang@cs.utah.edu)
 AM_INIT_AUTOMAKE(s3fp, 0.1) 
-AC_OUTPUT(Makefile src/Makefile examples/Makefile) 
+AC_OUTPUT(Makefile src/Makefile examples/Makefile examples/lib/Makefile examples/lib/div_geometric_primitives/Makefile examples/tests-div-detection/Makefile examples/tests-div-detection/pp_3x3/Makefile) 
 # AC_CONFIG_SRCDIR([scripts/utils/show_input_to_errors.cpp])
 # AC_CONFIG_HEADERS([config.h])
 
