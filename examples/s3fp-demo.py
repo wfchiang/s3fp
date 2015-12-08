@@ -198,27 +198,24 @@ elif (MODE == "div"):
     ERR_OPT = "FIRST" 
     REL_DELTA = float(0.0)    
 
-    if (BENCH == "pp_3x3"): 
-        N_VARS = 12 
-        EXE_LP = "pp_3x3_32" 
-        EXE_HP = "pp_3x3_128" 
+    if (BENCH in ["pp_3x3", "pp_4x4", "pc_3x3", "pc_4x4", "ps_4x4", "ps_5x5"]): 
+        if (BENCH in ["pp_3x3", "pp_4x4"]): 
+            N_VARS = 12 
+        elif (BENCH in ["pc_3x3", "pc_4x4"]): 
+            N_VARS = 8 
+        elif (BENCH in ["ps_4x4", "ps_5x5"]):
+            N_VARS = 15 
+        else:
+            sys.exit("Error: broken control flow...") 
+
+        EXE_LP = BENCH + "_32" 
+        EXE_HP = BENCH + "_128" 
         SIG_FUNC = "LAST_INT"
         DIV_FUNC = "LAST_INT" 
 
         SetUniformInput(-100.0, 100.0) 
 
-        TestDiv(DIR_BENCH+"/pp_3x3", DIR_CURR) 
-
-    elif (BENCH == "pp_4x4"): 
-        N_VARS = 12 
-        EXE_LP = "pp_4x4_32" 
-        EXE_HP = "pp_4x4_128" 
-        SIG_FUNC = "LAST_INT" 
-        DIV_FUNC = "LAST_INT" 
-
-        SetUniformInput(-100.0, 100.0) 
-
-        TestDiv(DIR_BENCH+"/pp_4x4", DIR_CURR) 
+        TestDiv(DIR_BENCH+"/"+BENCH, DIR_CURR) 
 
     else: 
         sys.exit("Error: unknown benchmark for div. demo : " + BENCH) 

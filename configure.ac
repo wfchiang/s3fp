@@ -16,7 +16,12 @@ examples/tests-fp-error/imbalanced-reduction/Makefile
 examples/tests-fp-error/kahan-sum/Makefile
 examples/tests-div-detection/Makefile 
 examples/tests-div-detection/pp_3x3/Makefile 
-examples/tests-div-detection/pp_4x4/Makefile)
+examples/tests-div-detection/pp_4x4/Makefile 
+examples/tests-div-detection/pc_3x3/Makefile 
+examples/tests-div-detection/pc_4x4/Makefile 
+examples/tests-div-detection/ps_4x4/Makefile 
+examples/tests-div-detection/ps_5x5/Makefile)
+
 
 # AC_CONFIG_SRCDIR([scripts/utils/show_input_to_errors.cpp])
 # AC_CONFIG_HEADERS([config.h])
