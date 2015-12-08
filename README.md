@@ -234,6 +234,7 @@ s3fp-demo.py div [ benchmark name ] [ testing method ] [ random seed ]
     * **pp_4x4**: 3D point-to-plane judgement through a 4x4 matrix. 
     * **ps_4x4**: 3D point-to-sphere judgement through a 4x4 matrix. 
     * **ps_5x5**: 3D point-to-sphere judgement through a 5x5 matrix.  
+    * **inc_convex_hull**: 2D convex hull construction by using an incremental method. 
 
 - **benchmark name** which must be used with **BGRT** as the testing method: 
 
