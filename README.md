@@ -1,9 +1,11 @@
 S3FP
 ====
+====
 
 
 
 About S3FP
+----------
 ----------
 S3FP is a dynamic testing tool for triggering high floating-point error scenarios of programs. 
 Currently, the high floating-point error scenarios include: 
@@ -23,6 +25,7 @@ For more information, please refer to the related publications:
 
 Installation
 ------------
+------------
 Please just use the python script "s3fp-install.py" for installation by 
 
 ```
@@ -31,6 +34,7 @@ s3fp-install.py build
 
 
 Usage
+-----
 -----
 ### Manual Generation of the Real-number Versions 
 S3FP performs error estimations based on the comparisons between the original programs and their corresponding real-number versions. 
@@ -184,6 +188,7 @@ Again, at this point, we rely on programmers to export **useful** discrete resul
 
 
 Demo
+----
 ---- 
 A demo script, **s3fp-demo.py** is provided under directory **examples** which may help properly using S3FP. 
 To use this script, the current working directory must be directory **examples**. 
