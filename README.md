@@ -4,7 +4,7 @@
 
 
 
-About S3FP
+## About S3FP
 ----------
 ----------
 S3FP is a dynamic testing tool for triggering high floating-point error scenarios of programs. 
@@ -23,7 +23,7 @@ For more information, please refer to the related publications:
 
 
 
-Installation
+## Installation
 ------------
 ------------
 Please just use the python script "s3fp-install.py" for installation by 
@@ -33,7 +33,7 @@ s3fp-install.py build
 ```
 
 
-Usage
+## Usage
 -----
 -----
 ### Manual Generation of the Real-number Versions 
@@ -187,7 +187,7 @@ The default value is 0.
 Again, at this point, we rely on programmers to export **useful** discrete results to S3FP such that S3FP can judge differential contract (the consistency between Float's and Real's signatures) and divergence by only observing the discrete results (from both Float and Real). The value of DIV_FUNC should be one of the candidate of SIG_FUNC. 
 
 
-Demo
+## Demo
 ----
 ---- 
 A demo script, **s3fp-demo.py** is provided under directory **examples** which may help properly using S3FP. 
