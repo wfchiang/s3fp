@@ -181,3 +181,60 @@ The default value is 0.
 
 - **DIV_FUNC**: the function that check divergence based on the program's discrete results. 
 Again, at this point, we rely on programmers to export **useful** discrete results to S3FP such that S3FP can judge differential contract (the consistency between Float's and Real's signatures) and divergence by only observing the discrete results (from both Float and Real). The value of DIV_FUNC should be one of the candidate of SIG_FUNC. 
+
+
+Demo
+---- 
+A demo script, **s3fp-demo.py** is provided under directory **examples** which may help properly using S3FP. 
+To use this script, the current working directory must be directory **examples**. 
+The usage is shown as follows. 
+
+```
+s3fp-demo.py [ "round-off" | "div" ] [ benchmark name ] [ testing method ] [ random seed ] 
+``` 
+
+The usage details are shown in the following sections. 
+
+
+### Demo of Round-off Error Estimation 
+The usage is 
+
+```
+s3fp-demo.py round-off [ benchmark name ] [ testing method ] [ random seed ] 
+```
+
+- **benchmark name**: 
+
+    * **balanced-reduction**: balanced reduction. 
+    * **imbalanced-reduction**: imbalanced reduction. 
+    * **kahan-sum**: Kahan's summation.  
+
+- **testing method**: 
+
+    * **URT**: pure random testing. 
+    * **BGRT**: binary guided random testing. 
+    * **ILS**: iterative local search. 
+    * **PSO**: particle swarm optimization.   
+
+- **random seed**: an unsigned integer. 
+
+
+### Demo of Divergence Detection 
+The usage is 
+
+```
+s3fp-demo.py div [ benchmark name ] [ testing method ] [ random seed ] 
+```
+
+- **benchmark name**: 
+
+    * **pp_3x3**: 3D point-to-plane judgement through a 3x3 matrix. 
+    * **pp_4x4**: 3D point-to-plane judgement through a 4x4 matrix. 
+
+- **testing method**: 
+  
+    * **BGRT**: binary guided random testing. 
+    * **ABS**: abstract binary search. 
+  
+- **random seed**: an unsigned integer. 
+
