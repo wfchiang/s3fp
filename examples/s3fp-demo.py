@@ -209,6 +209,17 @@ elif (MODE == "div"):
 
         TestDiv(DIR_BENCH+"/pp_3x3", DIR_CURR) 
 
+    elif (BENCH == "pp_4x4"): 
+        N_VARS = 12 
+        EXE_LP = "pp_4x4_32" 
+        EXE_HP = "pp_4x4_128" 
+        SIG_FUNC = "LAST_INT" 
+        DIV_FUNC = "LAST_INT" 
+
+        SetUniformInput(-100.0, 100.0) 
+
+        TestDiv(DIR_BENCH+"/pp_4x4", DIR_CURR) 
+
     else: 
         sys.exit("Error: unknown benchmark for div. demo : " + BENCH) 
 
