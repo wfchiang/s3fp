@@ -43,7 +43,7 @@ vector<Point> Insiders;
    if outfile == NULL, the determinant will not be recorded 
 */
 template<typename OWFT> 
-int Orientation (Point p, Point q, Point r, FILE *outfile, OWFT &ret_det) {
+int Orientation (Point p, Point q, Point r, OWFT &ret_det) {
   OWFT px = (OWFT) p.x; 
   OWFT py = (OWFT) p.y;
   OWFT qx = (OWFT) q.x;
@@ -52,11 +52,6 @@ int Orientation (Point p, Point q, Point r, FILE *outfile, OWFT &ret_det) {
   OWFT ry = (OWFT) r.y; 
 
   OWFT det = ((qx - px) * (ry - py)) - ((qy - py) * (rx - px));	
-
-  if (outfile != NULL) {
-    OFT odata = (OFT) det; 
-    fwrite(&odata, sizeof(OFT), 1, outfile); 
-  }
 
   ret_det = det; 
 
@@ -211,7 +206,6 @@ void Canonical_Ordered_Points (vector<Point>& pv, int cano_selection) {
     int ori = Orientation<OWFT> (pv[right_index], 
 				 pv[nh_index], 
 				 pv[left_index], 
-				 NULL, 
 				 ret_det); 
     if (ori == 1) to_left = true;  
     else if (ori == 0) {
@@ -261,8 +255,14 @@ void PrintPV (vector<Point> pv) {
 void WRONG_CONVEX_HULL (FILE *outfile) {
   assert(outfile != NULL); 
 
-  OFT odata = -1; 
+  OFT odata = 1; 
   fwrite(&odata, sizeof(OFT), 1, outfile);
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+  odata = -1; 
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+
   RAISE_ASSERTION = true; 
 }
 
@@ -291,7 +291,7 @@ void ReadInputs (FILE *infile) {
 }
 
 
-void ComputeConvexhull (FILE *outfile) {
+void ComputeConvexhull (FILE *outfile) { 
   // find the first hull (triangle) 
   assert(PointList.size() >= 3); 
   Convexhull.push_back(PointList[0]); 
@@ -304,16 +304,8 @@ void ComputeConvexhull (FILE *outfile) {
        pi++) {
 
     WFT det; 
-    int ori = Orientation<WFT>(Convexhull[0], Convexhull[1], (*pi), 
-			       NULL, det); 
+    int ori = Orientation<WFT>(Convexhull[0], Convexhull[1], (*pi), det); 
     
-    /*
-    __float128 det_128; 
-    int ori = Orientation<__float128>(Convexhull[0], Convexhull[1], (*pi), 
-				      NULL, det_128);  
-    det = det_128; 
-    */
-
     if (ori > 0) {
       Convexhull.push_back((*pi));
       PointList.erase(pi); 
@@ -351,35 +343,14 @@ void ComputeConvexhull (FILE *outfile) {
       WFT det_prev_this; 
       WFT det_this_next; 
 
-      FILE *outf = NULL; 
-      if (SAMPLE_PHASE == 0)
-	outf = outfile; 
-
       int ori_prev_this = Orientation<WFT>(Convexhull[prev_hi], 
 					   Convexhull[this_hi], 
 					   (*pi), 
-					   outf, 
 					   det_prev_this);
       int ori_this_next = Orientation<WFT>(Convexhull[this_hi], 
 					   Convexhull[next_hi], 
 					   (*pi), 
-					   outf, 
 					   det_this_next);     
-      /*
-      __float128 det_prev_this_128, det_this_next_128; 
-      int ori_prev_this = Orientation<__float128>(Convexhull[prev_hi], 
-						  Convexhull[this_hi], 
-						  (*pi), 
-						  outf, 
-						  det_prev_this_128);
-      int ori_this_next = Orientation<__float128>(Convexhull[this_hi], 
-						  Convexhull[next_hi], 
-						  (*pi), 
-						  outf, 
-						  det_this_next_128);     
-      det_prev_this = det_prev_this_128;
-      det_this_next = det_this_next_128; 
-      */
 
       if (ori_prev_this <= 0 && 
 	  ori_this_next > 0) { // point (*pi) can see prev -> this but cannot see this -> next. 
@@ -501,7 +472,7 @@ void VerifyHull(FILE *outfile) {
     long ii; 
     for (ii = 0 ; ii < Convexhull.size() - 2 ; ii++) {
       WFT det; 
-      ideal_ori = Orientation<WFT>(Convexhull[ii], Convexhull[ii+1], Convexhull[ii+2], NULL, det); 
+      ideal_ori = Orientation<WFT>(Convexhull[ii], Convexhull[ii+1], Convexhull[ii+2], det); 
       if (ideal_ori == 0) continue;
       else break; 
     }
@@ -517,7 +488,7 @@ void VerifyHull(FILE *outfile) {
 	
 	if (SAMPLE_PHASE == 1) {
 	  WFT det; 
-	  this_ori = Orientation<WFT>(Convexhull[hi_p], Convexhull[hi_q], (*pi), outfile, det); 
+	  this_ori = Orientation<WFT>(Convexhull[hi_p], Convexhull[hi_q], (*pi), det); 
 	  if (this_ori != 0) {
 	    if (this_ori * ideal_ori < 0) {
 	      WRONG_CONVEX_HULL(outfile);
@@ -525,16 +496,6 @@ void VerifyHull(FILE *outfile) {
 	    }
 	  }
 	}
-	/*
-	__float128 det128; 
-	this_ori = Orientation<__float128>(Convexhull[hi_p], Convexhull[hi_q], (*pi), NULL, det128); 
-	if (this_ori != 0) {
-	  if (this_ori * ideal_ori < 0) {
-	    WRONG_CONVEX_HULL(outfile); 
-	    return ;
-	  }
-	}
-	*/
       }
     }
   }
@@ -561,10 +522,15 @@ int main (int argc, char *argv[]) {
 
   ComputeConvexhull(outfile); 
 
-  VerifyHull(outfile); // VerifyHull will close the outfile 
+  // VerifyHull(outfile); // VerifyHull will close the outfile 
 
   if (RAISE_ASSERTION == false) {
-    OFT odata = Convexhull.size();
+    OFT odata = 1; 
+    fwrite(&odata, sizeof(OFT), 1, outfile); 
+    fwrite(&odata, sizeof(OFT), 1, outfile); 
+
+    fwrite(&odata, sizeof(OFT), 1, outfile); 
+    odata = Convexhull.size();
     fwrite(&odata, sizeof(OFT), 1, outfile); 
   }
   

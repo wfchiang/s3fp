@@ -20,7 +20,8 @@ examples/tests-div-detection/pp_4x4/Makefile
 examples/tests-div-detection/pc_3x3/Makefile 
 examples/tests-div-detection/pc_4x4/Makefile 
 examples/tests-div-detection/ps_4x4/Makefile 
-examples/tests-div-detection/ps_5x5/Makefile 
+examples/tests-div-detection/ps_5x5/Makefile
+examples/tests-div-detection/inc_convex_hull/Makefile  
 examples/tests-div-detection/cpu-scan-naive-opt-last/Makefile 
 examples/tests-div-detection/cpu-scan-naive-opt-sum/Makefile 
 examples/tests-div-detection/cpu-scan-harris-opt-last/Makefile 

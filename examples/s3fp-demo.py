@@ -215,6 +215,19 @@ elif (MODE == "div"):
 
         SetUniformInput(-100.0, 100.0) 
 
+    elif (BENCH == "inc_convex_hull"): 
+        assert(RT == "ABS") 
+
+        ERR_OPT = "FIRST" 
+        N_VARS = 2000 
+        EXE_LP = "inc_convex_hull_32 0 0 0" 
+        EXE_HP = "inc_convex_hull_128 0 0 0" 
+
+        SIG_FUNC = "LAST_INT" 
+        DIV_FUNC = "LAST_INT" 
+
+        SetUniformInput(-100.0, 100.0) 
+
     elif (BENCH in ["cpu-scan-naive-opt-last", "cpu-scan-naive-opt-sum", "cpu-scan-harris-opt-last", "cpu-scan-harris-opt-sum"]):
         assert(RT == "BGRT") 
 
