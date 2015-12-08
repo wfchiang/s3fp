@@ -24,13 +24,27 @@ UNIFORM_INPUTUB = None
 INPUT_RANGE_FILE = None 
 ERR_FUNC = None 
 ERR_OPT = None 
+SIG_FUNC = None 
+DIV_FUNC = None 
 
 
 # ========
 # sub-routines 
 # ========
 def S3FPBasicSetting (fname): 
-    assert(RT in ["URT", "BGRT", "ILS", "PSO", "AWBS"]) 
+    global INPUT_FILE 
+    global OUTPUT_LP 
+    global OUTPUT_HP 
+    global TIMEOUT 
+    global RESOURCE 
+
+    INPUT_FILE = "random_input" 
+    OUTPUT_LP = "output_lp" 
+    OUTPUT_HP = "output_hp" 
+    TIMEOUT = int(5000) 
+    RESOURCE = "SVE" 
+
+    assert(RT in ["URT", "BGRT", "ILS", "PSO", "ABS"]) 
     assert((type(N_VARS) is int) and (0 < N_VARS))
     assert(type(INPUT_FILE) is str) 
     assert((type(EXE_LP) is str) and (type(OUTPUT_LP) is str)) 
@@ -42,7 +56,6 @@ def S3FPBasicSetting (fname):
 
     assert(ERR_FUNC in ["REL", "ABSREL", "ABSRELMAXONE", "ABS", "ABSABS", "LOWP"])
     assert(ERR_OPT in ["FIRST", "LAST", "SUM", "MAX", "AVE"]) 
-    
 
     assert(UNIFORM_INPUT in ["true", "false"])
     if (UNIFORM_INPUT == "true"): 
@@ -79,6 +92,20 @@ def S3FPBasicSetting (fname):
     sfile.close() 
 
 
+def S3FPDivSetting (fname): 
+    assert(SIG_FUNC in ["SINGLE_INT", "SINGLE_UINT", "LAST_INT", "LAST_UINT"]) 
+    assert(DIV_FUNC in ["SINGLE_INT", "SINGLE_UINT", "LAST_INT", "LAST_UINT"]) 
+    
+    sfile = open(fname, "a")
+
+    sfile.write("SIG_FUNC = " + SIG_FUNC + "\n") 
+    sfile.write("DIV_FUNC = " + DIV_FUNC + "\n") 
+    sfile.write("CHECK_DIV = true\n") 
+    sfile.write("DIV_ERROR_REPORT = __div_error\n") 
+
+    sfile.close() 
+
+
 def SetUniformInput (vlb, vub): 
     global UNIFORM_INPUT 
     global UNIFORM_INPUTLB 
@@ -92,20 +119,6 @@ def SetUniformInput (vlb, vub):
     
 
 def TestRoundoff (dir_bench, dir_back): 
-    global INPUT_FILE 
-    global OUTPUT_LP 
-    global OUTPUT_HP 
-    global TIMEOUT 
-    global RESOURCE 
-    global RSEED 
-    global REL_DELTA 
-
-    INPUT_FILE = "random_input" 
-    OUTPUT_LP = "output_lp" 
-    OUTPUT_HP = "output_hp" 
-    TIMEOUT = int(5000) 
-    RESOURCE = "SVE" 
-
     os.chdir(dir_bench)
 
     S3FPBasicSetting("s3fp_setting") 
@@ -113,6 +126,18 @@ def TestRoundoff (dir_bench, dir_back):
     os.system(S3FP) 
 
     os.chdir(dir_back) 
+
+
+def TestDiv (dir_bench, dir_back): 
+    os.chdir(dir_bench) 
+
+    S3FPBasicSetting("s3fp_setting") 
+    S3FPDivSetting("s3fp_setting") 
+
+    os.system(S3FP) 
+    
+    os.chdir(dir_back) 
+    
 
 
 # ========
@@ -170,10 +195,19 @@ elif (MODE == "div"):
     DIR_BENCH = "./tests-div-detection" 
 
     ERR_FUNC = "REL" 
+    ERR_OPT = "FIRST" 
     REL_DELTA = float(0.0)    
 
     if (BENCH == "pp_3x3"): 
-        pass 
+        N_VARS = 12 
+        EXE_LP = "pp_3x3_32" 
+        EXE_HP = "pp_3x3_128" 
+        SIG_FUNC = "LAST_INT"
+        DIV_FUNC = "LAST_INT" 
+
+        SetUniformInput(-100.0, 100.0) 
+
+        TestDiv(DIR_BENCH+"/pp_3x3", DIR_CURR) 
 
     else: 
         sys.exit("Error: unknown benchmark for div. demo : " + BENCH) 

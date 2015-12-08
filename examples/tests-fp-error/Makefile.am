@@ -1,2 +1,2 @@
 
-SUBDIRS = balanced-reduction imbalanced-reduction kahan_sum 
+SUBDIRS = balanced-reduction imbalanced-reduction kahan-sum 

@@ -168,6 +168,10 @@ The error stream would be projected to a single value for the purpose of the com
 - **REL_DELTA**: a **floating-point number** works as a padding when calculating the related error. 
 The default value is 0. 
 
+- **CHECK_DIV**: a **boolean** which indicates divergence detection. 
+
+- **DIV_ERROR_REPORT**: a file that dedicate to S3FP for its internal use. 
+
 - **SIG_FUNC**: the function that check the differential contract, which is 
 **SIG_FUNC(Float's discrete results) == SIG_FUNC(Real's discrete results)**. 
     * **SINGLE_INT**: the signature should be a single integer. 

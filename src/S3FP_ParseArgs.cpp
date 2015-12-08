@@ -220,7 +220,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       else if (svalue.compare("OPT4J") == 0) rt_mode = OPT4J_MODE; 
       else if (svalue.compare("ROBUST_EST") == 0) rt_mode = ROBUST_EST_RT_MODE; 
       else if (svalue.compare("UROBUST_CHECK") == 0) rt_mode = UROBUST_CHECK_RT_MODE; 
-      else if (svalue.compare("ABS") || svalue.compare("AWBS") == 0) rt_mode = AWBS_RT_MODE; 
+      else if ((svalue.compare("ABS") == 0) || (svalue.compare("AWBS") == 0)) rt_mode = AWBS_RT_MODE; 
       else assert(false);
       has_rt_mode = true;
     }
@@ -317,7 +317,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       else random_func = NAIVE_RANDOM_FUNC;
       has_random_func = true; 
     }
-    else if (sname.compare("CHECK_UNSTABLE_ERROR") == 0) {
+    else if ((sname.compare("CHECK_DIV") == 0) || (sname.compare("CHECK_UNSTABLE_ERROR") == 0)) {
       if (svalue.compare("true") == 0) check_unstable_error = true;
       else check_unstable_error = false;
       has_check_unstable_error = true;
@@ -334,7 +334,7 @@ bool S3FP_ParseArgs (unsigned int &n_vars,
       else assert(false); 
       has_awbs_fivestage_assist = true; 
     }
-    else if (sname.compare("UNSTABLE_ERROR_REPORT") == 0) {
+    else if ((sname.compare("DIV_ERROR_REPORT") == 0) || (sname.compare("UNSTABLE_ERROR_REPORT") == 0)) {
       unstable_error_report = svalue; 
       has_unstable_error_report = true; 
     }
