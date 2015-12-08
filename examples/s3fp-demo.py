@@ -215,7 +215,7 @@ elif (MODE == "div"):
 
         SetUniformInput(-100.0, 100.0) 
 
-    elif (BENCH in ["cpu-scan-naive-opt-last", "cpu-scan-naive-opt-sum"]):
+    elif (BENCH in ["cpu-scan-naive-opt-last", "cpu-scan-naive-opt-sum", "cpu-scan-harris-opt-last", "cpu-scan-harris-opt-sum"]):
         assert(RT == "BGRT") 
 
         scan_method = None 
@@ -225,10 +225,22 @@ elif (MODE == "div"):
             scan_method = 0 
             opt_method = 0 
             ERR_OPT = "FIRST" 
+
         elif (BENCH == "cpu-scan-naive-opt-sum"):
             scan_method = 0 
             opt_method = 1 
             ERR_OPT = "SUM" 
+
+        elif (BENCH == "cpu-scan-harris-opt-last"):
+            scan_method = 1 
+            opt_method = 0 
+            ERR_OPT = "FIRST" 
+
+        elif (BENCH == "cpu-scan-harris-opt-sum"):
+            scan_method = 1 
+            opt_method = 1 
+            ERR_OPT = "SUM" 
+
         else:
             sys.exit("Error: broken control flow...") 
 
@@ -239,7 +251,7 @@ elif (MODE == "div"):
         SIG_FUNC = "LAST_INT" 
         DIV_FUNC = "LAST_INT" 
 
-        SetUniformInput(-100.0, 100.0)         
+        SetUniformInput(0.0, 100.0)         
 
     else: 
         sys.exit("Error: unknown benchmark for div. demo : " + BENCH) 
