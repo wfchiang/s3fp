@@ -15,14 +15,16 @@ void ExtractEEstSigValues (vector<HFP_TYPE> poutputs,
   assert(poutputs.size() >= 1); 
   err_est_vals.clear();
   div_det_vals.clear(); 
-  
+
   if (poutputs.size() == 1) {
     err_est_vals.push_back(poutputs[0]); 
   }
+  /*
   else if (poutputs.size() == 2) {
     err_est_vals.push_back(poutputs[0]);
     div_det_vals.push_back(poutputs[1]); 
   }
+  */
   else { 
     HFP_TYPE n_eev = poutputs[0]; 
     assert(n_eev == floorq(n_eev)); 

@@ -190,15 +190,15 @@ if (MODE == "round-off"):
 
 
 elif (MODE == "div"): 
-    assert(RT in ["BGRT", "ABS"]) 
-
     DIR_BENCH = "./tests-div-detection" 
 
     ERR_FUNC = "REL" 
-    ERR_OPT = "FIRST" 
     REL_DELTA = float(0.0)    
 
     if (BENCH in ["pp_3x3", "pp_4x4", "pc_3x3", "pc_4x4", "ps_4x4", "ps_5x5"]): 
+        assert(RT == "ABS") 
+        ERR_OPT = "FIRST" 
+
         if (BENCH in ["pp_3x3", "pp_4x4"]): 
             N_VARS = 12 
         elif (BENCH in ["pc_3x3", "pc_4x4"]): 
@@ -215,10 +215,36 @@ elif (MODE == "div"):
 
         SetUniformInput(-100.0, 100.0) 
 
-        TestDiv(DIR_BENCH+"/"+BENCH, DIR_CURR) 
+    elif (BENCH in ["cpu-scan-naive-opt-last", "cpu-scan-naive-opt-sum"]):
+        assert(RT == "BGRT") 
+
+        scan_method = None 
+        opt_method = None 
+
+        if (BENCH == "cpu-scan-naive-opt-last"): 
+            scan_method = 0 
+            opt_method = 0 
+            ERR_OPT = "FIRST" 
+        elif (BENCH == "cpu-scan-naive-opt-sum"):
+            scan_method = 0 
+            opt_method = 1 
+            ERR_OPT = "SUM" 
+        else:
+            sys.exit("Error: broken control flow...") 
+
+        N_VARS = 1024 
+
+        EXE_LP = "cpu_scan_32 " + str(scan_method) + " " + str(opt_method) 
+        EXE_HP = "cpu_scan_128 " + str(scan_method) + " " + str(opt_method) 
+        SIG_FUNC = "LAST_INT" 
+        DIV_FUNC = "LAST_INT" 
+
+        SetUniformInput(-100.0, 100.0)         
 
     else: 
         sys.exit("Error: unknown benchmark for div. demo : " + BENCH) 
+
+    TestDiv(DIR_BENCH+"/"+BENCH, DIR_CURR) 
 
         
 else: 

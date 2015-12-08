@@ -74,10 +74,12 @@ int main (int argc, char *argv[]) {
 
   int sign = (det >= 0.0 ? 1.0 : -1.0); 
 
-  OFT det128 = det; 
-  OFT sign128 = sign; 
+  OFT odata = 1; 
+  fwrite(&odata, sizeof(OFT), 1, outfile); 
+  fwrite(&odata, sizeof(OFT), 1, outfile); 
 
-  fwrite(&det128, sizeof(OFT), 1, outfile); 
+  OFT sign128 = sign; 
+  fwrite(&odata, sizeof(OFT), 1, outfile); 
   fwrite(&sign128, sizeof(OFT), 1, outfile); 
 
   fclose(infile); 

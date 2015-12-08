@@ -89,10 +89,12 @@ int main (int argc, char *argv[]) {
   // int sign = (det == 0.0 ? 0 : (det > 0.0 ? 1 : -1));
   int sign = (det >= 0.0 ? 1 : -1); 
 
-  __float128 det128 = det; 
-  __float128 sign128 = sign; 
+  __float128 odata = 1; 
+  fwrite(&odata, sizeof(__float128), 1, outfile); 
+  fwrite(&odata, sizeof(__float128), 1, outfile); 
 
-  fwrite(&det128, sizeof(__float128), 1, outfile); 
+  __float128 sign128 = sign; 
+  fwrite(&odata, sizeof(__float128), 1, outfile); 
   fwrite(&sign128, sizeof(__float128), 1, outfile); 
 
   fclose(infile); 

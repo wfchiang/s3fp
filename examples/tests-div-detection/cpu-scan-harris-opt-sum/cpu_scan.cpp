@@ -132,11 +132,20 @@ int main (int argc, char *argv[]) {
   odata[N-1] = (invariant_violated ? 1.0 : -1.0); 
   
   if (optmethod == 0) {
+    OFT od = 1; 
+    fwrite(&od, sizeof(OFT), 1, outfile); 
     fwrite(&odata[N-2], sizeof(OFT), 1, outfile); 
+    fwrite(&od, sizeof(OFT), 1, outfile); 
     fwrite(&odata[N-1], sizeof(OFT), 1, outfile); 
   }
   else if (optmethod == 1) {
-    s3fpWriteOutputs<OFT>(outfile, N, odata); 
+    OFT vs_length = N - 1; 
+    assert(vs_length >= 1); 
+    fwrite(&vs_length, sizeof(OFT), 1, outfile); 
+    s3fpWriteOutputs<OFT>(outfile, N-1, odata); 
+    vs_length = 1; 
+    fwrite(&vs_length, sizeof(OFT), 1, outfile); 
+    fwrite(&odata[N-1], sizeof(OFT), 1, outfile); 
   }
   else assert(false && "ERROR: No such opt method..."); 
 

@@ -228,8 +228,17 @@ s3fp-demo.py div [ benchmark name ] [ testing method ] [ random seed ]
 
 - **benchmark name**: 
 
+    * **pc_3x3**: 2D point-to-circle judgement through a 3x3 matrix. 
+    * **pc_4x4**: 2D point-to-circle judgement through a 4x4 matrix.
     * **pp_3x3**: 3D point-to-plane judgement through a 3x3 matrix. 
     * **pp_4x4**: 3D point-to-plane judgement through a 4x4 matrix. 
+    * **ps_4x4**: 3D point-to-sphere judgement through a 4x4 matrix. 
+    * **ps_5x5**: 3D point-to-sphere judgement through a 5x5 matrix.  
+    * **cpu-scan-naive-opt-last**: prefix-sum using naive approach and using the relative error of the last clause to drive BGRT's search. 
+    * **cpu-scan-naive-opt-sum**: prefix-sum using naive approach and using the summation of the relative errors of all clauses to drive BGRT's search. 
+    * **cpu-scan-harris-opt-last**: prefix-sum using the two-phase approach and using the relative error of the last clause to drive BGRT's search. 
+    * **cpu-scan-harris-opt-sum**: prefix-sum using the two-phase approach and using the summation of the relative errors of all clauses to drive BGRT's search. 
+    
 
 - **testing method**: 
   
