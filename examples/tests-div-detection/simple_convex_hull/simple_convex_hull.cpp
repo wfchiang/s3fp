@@ -65,7 +65,7 @@ FILE *localness_file = NULL;
    if outfile == NULL, the determinant will not be recorded 
 */
 template<typename OWFT> 
-int Orientation (Point p, Point q, Point r, FILE *outfile, OWFT &ret_det) {
+int Orientation (Point p, Point q, Point r, OWFT &ret_det) {
   OWFT px = (OWFT) p.x; 
   OWFT py = (OWFT) p.y;
   OWFT qx = (OWFT) q.x;
@@ -74,11 +74,6 @@ int Orientation (Point p, Point q, Point r, FILE *outfile, OWFT &ret_det) {
   OWFT ry = (OWFT) r.y; 
 
   OWFT det = ((qx - px) * (ry - py)) - ((qy - py) * (rx - px));	
-
-  if (outfile != NULL) {
-    OFT odata = (OFT) det; 
-    fwrite(&odata, sizeof(OFT), 1, outfile); 
-  }
 
   ret_det = det; 
 
@@ -228,7 +223,6 @@ void Canonical_Ordered_Points (vector<Point>& pv, int cano_selection) {
     int ori = Orientation<OWFT> (pv[right_index], 
 				 pv[nh_index], 
 				 pv[left_index], 
-				 NULL, 
 				 ret_det); 
     if (ori == 1) to_left = true;  
     else if (ori == 0) {
@@ -277,8 +271,14 @@ void PrintPV (vector<Point> pv) {
 
 void WRONG_CONVEX_HULL (FILE *outfile) {
   if (outfile == NULL) return ;
-  OFT odata = -1; 
+  OFT odata = 1; 
   fwrite(&odata, sizeof(OFT), 1, outfile);
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+  odata = -1; 
+  fwrite(&odata, sizeof(OFT), 1, outfile);
+
   RAISE_ASSERTION = true; 
 }
 
@@ -327,7 +327,6 @@ void SimpleComputeConvexhull (FILE *outfile) {
 	int ret = Orientation<WFT> (PointList[p], 
 				    PointList[q], 
 				    PointList[r], 
-				    ((SAMPLE_PHASE == 0) ? outfile : NULL), 
 				    det); 
 	bool decision; 
 	if (ret == 1) decision = true; // continue; 
@@ -420,7 +419,6 @@ void GiftWrappingComputeConvexhull (FILE *outfile) {
 
       WFT ret_det; 
       int this_ori = Orientation<WFT>(this_point, next_point, PointList[p], 
-				      ((SAMPLE_PHASE == 0) ? outfile : NULL), 
 				      ret_det);
       assert(this_ori == 1 || this_ori == 0 || this_ori == -1); 
       bool decision = (this_ori == -1 || this_ori == 0); 
@@ -476,13 +474,11 @@ void VerifyHull(FILE *outfile) {
   assert(outfile != NULL);
 
   if (VERIFY_METHOD == 0) return ;
-  else if (VERIFY_METHOD == 1 || VERIFY_METHOD == 2) {
+  else if (VERIFY_METHOD == 1) {
     WFT ret_det; 
     if (CHullEdges.size() < 3) {
       if (VERIFY_METHOD == 1) {
 	WRONG_CONVEX_HULL(outfile); return ; }
-      else if (VERIFY_METHOD == 2) 
-	return; 
       else assert(false); 
     }
     
@@ -493,7 +489,6 @@ void VerifyHull(FILE *outfile) {
     int decision = Orientation<WFT>(CHullEdges[0].first, 
 				    CHullEdges[0].second, 
 				    CHullEdges[1].second, 
-				    ((SAMPLE_PHASE == 1) ? outfile : NULL), 
 				    ret_det); 
     int i; 
     for (i = 1 ; i < (CHullEdges.size()-1) ; i++) {
@@ -505,7 +500,6 @@ void VerifyHull(FILE *outfile) {
 	  Orientation<WFT>(CHullEdges[i].first, 
 			   CHullEdges[i].second, 
 			   CHullEdges[i+1].second, 
-			   ((SAMPLE_PHASE == 1) ? outfile : NULL), 
 			   ret_det)) {
 	if (VERIFY_METHOD == 1) {
 	  WRONG_CONVEX_HULL(outfile); return ; }
@@ -519,7 +513,6 @@ void VerifyHull(FILE *outfile) {
 	Orientation<WFT>(CHullEdges[i].first, 
 			 CHullEdges[i].second, 
 			 CHullEdges[0].second, 
-			 ((SAMPLE_PHASE == 1) ? outfile : NULL), 
 			 ret_det)) {
       if (VERIFY_METHOD == 1) {
 	WRONG_CONVEX_HULL(outfile); return ; }
@@ -661,7 +654,7 @@ int main (int argc, char *argv[]) {
   assert(0 <= SAMPLE_PHASE && SAMPLE_PHASE <= 1); 
 
   VERIFY_METHOD = atoi(argv[4]); 
-  assert(0 <= VERIFY_METHOD && VERIFY_METHOD <= 2); 
+  assert(0 <= VERIFY_METHOD && VERIFY_METHOD <= 1); 
 
   FILE *infile = s3fpGetInFile(argc, argv); 
   FILE *outfile = s3fpGetOutFile(argc, argv); 
@@ -685,14 +678,15 @@ int main (int argc, char *argv[]) {
   if (VERIFY_METHOD == 0 || 
       VERIFY_METHOD == 1) {
     if (RAISE_ASSERTION == false) {
-      OFT odata = CHullEdges.size(); 
+      OFT odata = 1; 
+      fwrite(&odata, sizeof(OFT), 1, outfile); 
+      fwrite(&odata, sizeof(OFT), 1, outfile); 
+
+      fwrite(&odata, sizeof(OFT), 1, outfile); 
+      odata = CHullEdges.size(); 
       fwrite(&odata, sizeof(OFT), 1, outfile); 
     }
   }
-  else if (VERIFY_METHOD == 2) {
-    OFT odata = CheckConsistency(); 
-    fwrite(&odata, sizeof(OFT), 1, outfile); 
-  }    
   else assert(false && "Error: Invalid verification method"); 
  
   fclose(infile); 

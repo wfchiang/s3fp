@@ -215,13 +215,23 @@ elif (MODE == "div"):
 
         SetUniformInput(-100.0, 100.0) 
 
-    elif (BENCH == "inc_convex_hull"): 
+    elif (BENCH in ["simple_convex_hull", "inc_convex_hull"]): 
         assert(RT == "ABS") 
 
         ERR_OPT = "FIRST" 
-        N_VARS = 2000 
-        EXE_LP = "inc_convex_hull_32 0 0 0" 
-        EXE_HP = "inc_convex_hull_128 0 0 0" 
+
+        if (BENCH == "simple_convex_hull"): 
+            N_VARS = 100
+            EXE_LP = BENCH + "_32 0 0 0 0" 
+            EXE_HP = BENCH + "_128 0 0 0 0" 
+
+        elif (BENCH == "inc_convex_hull"):
+            N_VARS = 2000 
+            EXE_LP = BENCH + "_32 0 0 0" 
+            EXE_HP = BENCH + "_128 0 0 0" 
+
+        else: 
+            sys.exit("Error: broken control flow...") 
 
         SIG_FUNC = "LAST_INT" 
         DIV_FUNC = "LAST_INT" 
