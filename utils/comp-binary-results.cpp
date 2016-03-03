@@ -33,12 +33,12 @@ fillData (FILE *fd,
     if (bw == 32) {
       float inv;
       fread(&inv, sizeof(float), 1, fd);
-      data[i] = inv; 
+      data[i] = inv;
     }
     else if (bw == 64) {
       double inv;
       fread(&inv, sizeof(double), 1, fd);
-      data[i] = inv; 
+      data[i] = inv;
     }
     else assert(false); 
   }
@@ -47,6 +47,7 @@ fillData (FILE *fd,
 
 
 int main (int argc, char **argv) {
+  
   unsigned int bw_0, bw_1;
   char *fname_0, *fname_1;
   FILE *file_0, *file_1;
@@ -88,8 +89,11 @@ int main (int argc, char **argv) {
   fclose(file_0);
   fclose(file_1);
 
-  __float128 max_diff = 0.0; 
-  __float128 ave_diff = 0.0; 
+  __float128 max_diff  = 0.0;
+  __float128 sum_diff  = 0.0;
+  __float128 sum2_diff = 0.0; 
+  __float128 ave_diff  = 0.0;
+  __float128 var_diff  = 0.0;
 
   for (unsigned long i = 0 ; i < n_vals ; i++) {
     __float128 this_diff = data_0[i] - data_1[i];
@@ -97,22 +101,23 @@ int main (int argc, char **argv) {
 
     if (this_diff > max_diff) max_diff = this_diff;
 
-    ave_diff += this_diff; 
+    sum_diff += this_diff; 
   }
-  ave_diff /= (__float128)n_vals;
+  ave_diff = sum_diff / (__float128)n_vals;
 
-  __float128 var_diff = 0.0;
   for (unsigned int i = 0 ; i < n_vals ; i++) {
     __float128 this_diff = (data_0[i] - data_1[i]) - ave_diff;
     this_diff = this_diff * this_diff;
 
-    var_diff += this_diff;
+    sum2_diff += this_diff;
   }
-  var_diff /= (__float128)n_vals; 
+  var_diff = sum2_diff / (__float128)n_vals; 
 
-  printf("Max  diff. %f\n", (double)max_diff);
-  printf("Ave. diff. %f\n", (double)ave_diff);
-  printf("Var. diff. %f\n", (double)var_diff); 
+  printf("Data size %lu\n",  n_vals); 
+  printf("Sum. diff. %15.14f\n", (double)sum_diff); 
+  printf("Max  diff. %15.14f\n", (double)max_diff);
+  printf("Ave. diff. %15.14f\n", (double)ave_diff);
+  printf("Var. diff. %15.14f\n", (double)var_diff); 
   
   return 0; 
 }
