@@ -251,3 +251,34 @@ s3fp-demo.py div [ benchmark name ] [ testing method ] [ random seed ]
   
 - **random seed**: an unsigned integer. 
 
+
+### Additional Benchmarks for Round-off Error Estimation 
+There are more demo benchmarks for round-off error estimation in this package. 
+But they cannot be demonstrated by using **s3fp-demo.py** at this point. 
+Here are the descriptions for running those benchmarks. 
+
+**DQMOM** 
+
+To run this benchmark, 
+the user need to go to 
+
+'''
+examples/tests-fp-error/dqmom
+''' 
+
+and do 
+
+''' 
+cp Makefile.tester Makefile
+''' 
+
+A **Makefile** will be generated. 
+The user need to open the Makefile and modify s3fp's parameters in this file. 
+Then he/she can do 
+
+'''
+make test-[urt|bgrt|ils|pso] 
+''' 
+
+to run the benchmark. 
+

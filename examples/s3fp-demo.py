@@ -7,25 +7,25 @@ import random
 # ========
 # global variables 
 # ========
-RT = None 
-N_VARS = None 
-INPUT_FILE = None 
-EXE_LP = None 
-OUTPUT_LP = None 
-EXE_HP = None
-OUTPUT_HP = None 
-TIMEOUT = None 
-RESOURCE = None 
-RSEED = None 
-REL_DELTA = None 
-UNIFORM_INPUT = None 
-UNIFORM_INPUTLB = None 
-UNIFORM_INPUTUB = None 
+RT               = None 
+N_VARS           = None 
+INPUT_FILE       = None 
+EXE_LP           = None 
+OUTPUT_LP        = None 
+EXE_HP           = None
+OUTPUT_HP        = None 
+TIMEOUT          = None 
+RESOURCE         = None 
+RSEED            = None 
+REL_DELTA        = None 
+UNIFORM_INPUT    = None 
+UNIFORM_INPUTLB  = None 
+UNIFORM_INPUTUB  = None 
 INPUT_RANGE_FILE = None 
-ERR_FUNC = None 
-ERR_OPT = None 
-SIG_FUNC = None 
-DIV_FUNC = None 
+ERR_FUNC         = None 
+ERR_OPT          = None 
+SIG_FUNC         = None 
+DIV_FUNC         = None 
 
 
 # ========
@@ -35,14 +35,10 @@ def S3FPBasicSetting (fname):
     global INPUT_FILE 
     global OUTPUT_LP 
     global OUTPUT_HP 
-    global TIMEOUT 
-    global RESOURCE 
 
     INPUT_FILE = "random_input" 
     OUTPUT_LP = "output_lp" 
     OUTPUT_HP = "output_hp" 
-    TIMEOUT = int(5000) 
-    RESOURCE = "SVE" 
 
     assert(RT in ["URT", "BGRT", "ILS", "PSO", "ABS"]) 
     assert((type(N_VARS) is int) and (0 < N_VARS))
@@ -145,10 +141,13 @@ def TestDiv (dir_bench, dir_back):
 # ========
 assert(len(sys.argv) == 5) 
 
-MODE = sys.argv[1] 
-BENCH = sys.argv[2] 
-RT = sys.argv[3] 
-RSEED = int(sys.argv[4]) 
+MODE     = sys.argv[1] 
+BENCH    = sys.argv[2] 
+RT       = sys.argv[3] 
+RSEED    = int(sys.argv[4]) 
+
+TIMEOUT  = int(5000) 
+RESOURCE = "SVE" 
 
 DIR_CURR = os.getcwd() 
 S3FP = DIR_CURR + "/../src/s3fp" 
