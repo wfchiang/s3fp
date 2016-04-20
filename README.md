@@ -253,33 +253,20 @@ s3fp-demo.py div [ benchmark name ] [ testing method ] [ random seed ]
 
 
 ### Additional Benchmarks for Round-off Error Estimation 
-There are more demo benchmarks for round-off error estimation in this package. 
-But they cannot be demonstrated by using **s3fp-demo.py** at this point. 
-Here are the descriptions for running those benchmarks. 
+There are CPU and GPU demo benchmarks in this package. 
+However, they cannot be directly executed by script **s3fp-demo.py**. 
+Users need to manually run those benchmarks. 
+Those benchmarks are 
+DQMOM (CPU), FFT (GPU), LU (GPU), QR (GPU) and MM (GPU). 
 
-**DQMOM** 
+The instructions of executing those benchmarks are listed as follows: 
 
-To run this benchmark, 
-the user need to go to 
+- **DQMOM** 
 
-```
-examples/tests-fp-error/dqmom
-``` 
+    * Go to **examples/tests-fp-error/dqmom** 
+    * Do **cp Makefile.tester Makefile** 
+    * Modify s3fp's settings and the testing settings in the Makefile 
+    * Do **make test-[urt|bgrt|ils|pso]** to run s3fp 
 
-and do 
-
-
-``` 
-cp Makefile.tester Makefile
-```
-
-A **Makefile** will be generated. 
-The user need to open the Makefile and modify s3fp's parameters in this file. 
-Then he/she can do 
-
-```
-make test-[urt|bgrt|ils|pso] 
-``` 
-
-to run the benchmark. 
+- **FFT** 
 
