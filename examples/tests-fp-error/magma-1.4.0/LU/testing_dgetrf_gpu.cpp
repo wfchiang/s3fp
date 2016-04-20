@@ -250,7 +250,7 @@ int main( int argc, char** argv)
 	    for (unsigned int bi = 0 ; bi < N_REPEATS ; bi++) {
 
 	    // overwrite 
-	    fillInputs64(infile, h_A, lda*N);
+	    fillInputs32to64(infile, h_A, lda*N);
 	    memcpy(original_A, h_A, lda*N*sizeof(double));
 
             magma_dsetmatrix( M, N, h_A, lda, d_A, ldda );
@@ -298,7 +298,7 @@ int main( int argc, char** argv)
 
 	    // check error 
 	    double value_to_check = get_LU_error( M, N, h_A, lda, ipiv );
-	    writeOutput64(outfile, value_to_check);
+	    writeOutput64to128(outfile, value_to_check);
 
 	    // write output 
 	    // writeOutput64(outfile, h_A[(lda*N-N)-1]);

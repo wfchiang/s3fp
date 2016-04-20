@@ -132,9 +132,9 @@ int main( int argc, char** argv)
 	      
 	    // overwrite 
 #ifdef TAINED
-	    fillInputs64(infile, &alpha, 1);
+	    fillInputs32to64(infile, &alpha, 1);
 	    // alpha = (double) 1.1;
-	    fillInputs64(infile, &beta,  1);
+	    fillInputs32to64(infile, &beta,  1);
 	    // beta = (double) 1.2;
 	    for (unsigned int ri = 0 ; ri < sizeA ; ri++) {
 	      if (ri % lda == 0) {
@@ -248,7 +248,7 @@ int main( int argc, char** argv)
 	    */
 
 	    // write output 
-	    writeOutput64(outfile, h_Cmagma[0]);
+	    writeOutput64to128(outfile, h_Cmagma[0]);
 	    printf("h_Cmagma[0] = %21.20f\n", h_Cmagma[0]);
 
 	    } // the end of the buck testing 

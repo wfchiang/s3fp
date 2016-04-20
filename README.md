@@ -266,7 +266,12 @@ The instructions of executing those benchmarks are listed as follows:
     * Go to **examples/tests-fp-error/dqmom** 
     * Do **cp Makefile.tester Makefile** 
     * Modify s3fp's settings and the testing settings in the Makefile 
-    * Do **make test-[urt|bgrt|ils|pso]** to run s3fp 
+    * Do **make test-[ urt | bgrt | ils | pso ]** to run s3fp 
 
 - **FFT** 
+
+    * Go to **examples/tests-fp-error/parboil-fft** 
+    * Do **cp Makefile.tester Makefile**
+    * Modify s3fp's settings and the testing settings in the Makeilfe. Note that the users need to set CUDA_HOME by their own. 
+    * Do **make test-[ urt | bgrt | ils | pso ]** to run s3fp 
 

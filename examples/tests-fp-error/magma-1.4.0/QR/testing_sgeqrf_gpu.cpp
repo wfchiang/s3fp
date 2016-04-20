@@ -120,7 +120,7 @@ int main( int argc, char** argv)
 	    for (unsigned int bi = 0 ; bi < N_REPEATS ; bi++) { 
 
 	    // overwrite 
-	    fillInputs32(infile, h_A, n2);
+	    fillInputs32to32(infile, h_A, n2);
 
             lapackf77_slacpy( MagmaUpperLowerStr, &M, &N, h_A, &lda, h_R, &lda );
             magma_ssetmatrix( M, N, h_R, lda, d_A, ldda );
@@ -320,7 +320,7 @@ int main( int argc, char** argv)
 
 	    magma_sgetmatrix( M, N, d_A, ldda, h_R, M );
 	    // writeOutput32(outfile, h_R[n2-2]);
-	    writeOutput32(outfile, h_R[n2-1]);
+	    writeOutput32to128(outfile, h_R[n2-1]);
 	    // writeOutput32(outfile, h_R[(n2-lda)-1]);
 	    // printf("sgeqrf output (%d) %11.10f\n", h_R[n2-1]); 
 	    /*

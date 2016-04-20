@@ -270,7 +270,7 @@ int main( int argc, char **argv )
     cudaMemcpy(result, d_source, n_bytes,cudaMemcpyDeviceToHost);
     CUERR;
 
-    writeOutput64(outfile, (FT)result[NN*BB-1].y);
+    writeOutput64to128(outfile, (FT)result[NN*BB-1].y);
   }
 
   cudaFree(d_source);

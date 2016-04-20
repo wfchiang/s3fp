@@ -5,7 +5,6 @@ CPP=g++
 NVCC=nvcc
 
 CUDA_HOME=/home/wfchiang/lib/cuda-6.0
-CUDA_SDK_HOME=/home/wfchiang/lib/cuda-6.0-sdk/C
 
 export LD_LIBRARY_PATH := $(CUDA_HOME)/lib64:$(LD_LIBRARY_PATH)
 

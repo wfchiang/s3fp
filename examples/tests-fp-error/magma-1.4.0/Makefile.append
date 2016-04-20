@@ -30,6 +30,8 @@ S3FP_CHECK_UNSTABLE_ERROR=false
 
 MAGMA_DEV=1
 
+MAGMA_DIR = /home/wfchiang/lib/magma-1.4.0
+
 export LD_LIBRARY_PATH := /home/wfchiang/lib/cuda-5.5/lib64:$(LD_LIBRARY_PATH)
 
 
@@ -49,37 +51,43 @@ create-base-conf:
 	@echo OUTPUT_LP = $(OUTPUT_LP) >> s3fp_setting 
 	@echo OUTPUT_HP = $(OUTPUT_HP) >> s3fp_setting 
 
+test-run: 
+	  $(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N) random_input output_lp 
 
 
 test-urt-geqrf: create-base-conf
+	@cp ./QR/dataio.h $(MAGMA_DIR)/testing 
+	@cp ./QR/testing_sgeqrf_gpu.cpp $(MAGMA_DIR)/testing
+	@cp ./QR/testing_dgeqrf_gpu.cpp $(MAGMA_DIR)/testing
+	cd $(MAGMA_DIR) ; make 
 	@echo RT = URT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEQRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-bgrt-geqrf: create-base-conf
 	@echo RT = BGRT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEQRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-ils-geqrf: create-base-conf
 	@echo RT = ILS >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEQRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-pso-geqrf: create-base-conf
 	@echo RT = PSO >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEQRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
@@ -88,32 +96,32 @@ test-pso-geqrf: create-base-conf
 test-urt-getrf: create-base-conf
 	@echo RT = URT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GETRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-bgrt-getrf: create-base-conf
 	@echo RT = BGRT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GETRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-ils-getrf: create-base-conf
 	@echo RT = ILS >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GETRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-pso-getrf: create-base-conf
 	@echo RT = PSO >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GETRF) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgetrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
@@ -122,32 +130,32 @@ test-pso-getrf: create-base-conf
 test-urt-gemm: create-base-conf
 	@echo RT = URT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
-	@echo EXE_HP = \"testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-bgrt-gemm: create-base-conf
 	@echo RT = BGRT >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
-	@echo EXE_HP = \"testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-ils-gemm: create-base-conf
 	@echo RT = ILS >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
-	@echo EXE_HP = \"testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
 test-pso-gemm: create-base-conf
 	@echo RT = PSO >> s3fp_setting
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
-	@echo EXE_LP = \"testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
-	@echo EXE_HP = \"testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
+	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 

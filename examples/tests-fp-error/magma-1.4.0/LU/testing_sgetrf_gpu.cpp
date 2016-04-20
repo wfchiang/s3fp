@@ -262,7 +262,7 @@ int main( int argc, char** argv)
 	    for (int bi = 0 ; bi < N_REPEATS ; bi++) {
 
 	    // overwrite 
-	    fillInputs32(infile, h_A, lda*N);	    
+	    fillInputs32to32(infile, h_A, lda*N);	    
 	    memcpy(original_A, h_A, lda*N*sizeof(float));
 
             magma_ssetmatrix( M, N, h_A, lda, d_A, ldda );
@@ -310,7 +310,7 @@ int main( int argc, char** argv)
 
 	    // check error
 	    float value_to_check = get_LU_error( M, N, h_A, lda, ipiv );
-	    writeOutput32(outfile, value_to_check);
+	    writeOutput32to128(outfile, value_to_check);
 
 	    // write output 
 	    // writeOutput32(outfile, h_A[(lda*N-N)-1]);
