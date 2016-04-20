@@ -4,10 +4,8 @@ export LD_LIBRARY_PATH := ../../:$(LD_LIBRARY_PATH)
 CPP=g++
 NVCC=nvcc
 
-QD_HOME=/home/weifan/lib/qd-2.3.14/install
-GQD_HOME=/home/weifan/lib/gqd-1.2
-CUDA_HOME=/home/weifan/lib/cuda-6.0
-CUDA_SDK_HOME=/home/weifan/lib/cuda-4.2-sdk/C
+CUDA_HOME=/home/wfchiang/lib/cuda-6.0
+CUDA_SDK_HOME=/home/wfchiang/lib/cuda-6.0-sdk/C
 
 export LD_LIBRARY_PATH := $(CUDA_HOME)/lib64:$(LD_LIBRARY_PATH)
 
@@ -22,22 +20,19 @@ S3FP_DIR=/home/weifan/numerical_precision/s3fp/trunk
 
 all: compile 
 
-compile: fft-32 fft-128 
+compile: fft-32 fft-64
 
-fft-32: 
-	$(NVCC) -DFT=float -DFT2=float2 -Dmake_FT2=make_float2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -I $(QD_HOME)/include -c fft.cu -arch=sm_20 
+dataio.o: dataio.cpp dataio.h 
 
-	$(CPP) -I $(QD_HOME)/include fft.o $(QD_HOME)/lib/libqd.a -o fft-32 -lcuda -lcudart -L $(CUDA_HOME)/lib64 
+fft-32: dataio.o 
+	$(NVCC) -DFT=float -DFT2=float2 -Dmake_FT2=make_float2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=sm_20 
 
-fft-64: 
-	$(NVCC) -DFT=double -DFT2=double2 -Dmake_FT2=make_double2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -I $(QD_HOME)/include -I $(CUDA_SDK_HOME)/common/inc -c fft.cu -arch=sm_20 
+	$(CPP) fft.o dataio.o -o fft-32 -lcuda -lcudart -L $(CUDA_HOME)/lib64 
 
-	$(CPP) -I $(QD_HOME)/include fft.o $(QD_HOME)/lib/libqd.a -o fft-64 -lcuda -lcutil_x86_64 -lcudart -L $(CUDA_HOME)/lib64 -L $(CUDA_SDK_HOME)/lib
+fft-64: dataio.o 
+	$(NVCC) -DFT=double -DFT2=double2 -Dmake_FT2=make_double2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=sm_20
 
-fft-128:
-	$(NVCC) -DNN=$(NN) -DBB=$(BB) -DR=$(R) -I $(QD_HOME)/include -I$(GQD_HOME)/inc -I $(CUDA_SDK_HOME)/common/inc -c fft.128.cu -arch=sm_20 
-
-	$(CPP) -I $(QD_HOME)/include -I $(GQD_HOME)/inc fft.128.o $(QD_HOME)/lib/libqd.a -o fft-128 -lcuda -lcutil_x86_64 -lcudart -L $(CUDA_HOME)/lib64 -L $(CUDA_SDK_HOME)/lib
+	$(CPP) fft.o dataio.o -o fft-64 -lcuda -lcudart -L $(CUDA_HOME)/lib64
 
 
 TIMEOUT=20
@@ -88,9 +83,10 @@ test-pso: create-base-conf
 	@$(S3FP_DIR)/s3fp-dd 32 $(INPUT_SIZE) fft-gpu_input fft-32 fft-gpu_output_32 fft-128 fft-gpu_output_128 
 
 clean:
+	-rm *~
 	-rm *.o 
-	-rm fft-32 fft-64 fft-128 
+	-rm fft-32 fft-64 
 	-rm __outdump
-	-rm best_input
+	-rm best_input_* 
 	-rm fft-gpu_input
 	-rm fft-gpu_output_*

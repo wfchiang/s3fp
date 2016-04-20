@@ -8,11 +8,11 @@
 
 #include <stdio.h>
 #include <cuda.h>
-// #include <parboil.h>
 #include <assert.h>
-#include <qd/qd_real.h>
-
 #include <iostream>
+
+#include "dataio.h" 
+
 using namespace std;
 
 
@@ -91,32 +91,8 @@ void inputData(FILE* fid, FT2* dat, int num_ft2)
     else // (sizeof(FT) == 8) 
       dat[i].y = (double) in_data; 
   }
-  /*
-  for (unsigned int i = 0 ; i < num_ft2 ; i++) {
-    dd_real in_data;
-    fread(&(in_data.x[0]), sizeof(double), 1, fid);
-    fread(&(in_data.x[1]), sizeof(double), 1, fid);
-    if (sizeof(FT) == 4) 
-      dat[i].x = (float) to_double(in_data);
-    else // (sizeof(FT) == 8) 
-      dat[i].x = (double) to_double(in_data);
-    fread(&(in_data.x[0]), sizeof(double), 1, fid);
-    fread(&(in_data.x[1]), sizeof(double), 1, fid);
-    if (sizeof(FT) == 4) 
-      dat[i].y = (float) to_double(in_data);
-    else // (sizeof(FT) == 8) 
-      dat[i].y = (double) to_double(in_data);
-  }
-  */
 }
 
-void outputData(FILE* outfile, FT outdat)
-{
-  dd_real out_data((double)outdat);
-  cout << "out_data : " << out_data << endl;
-  fwrite(&(out_data.x[0]), sizeof(double), 1, outfile);
-  fwrite(&(out_data.x[1]), sizeof(double), 1, outfile);
-}
   
 __device__ void GPU_FFT2( FT2 &v1,FT2 &v2 ) { 
   FT2 v0 = v1;  
@@ -294,7 +270,7 @@ int main( int argc, char **argv )
     cudaMemcpy(result, d_source, n_bytes,cudaMemcpyDeviceToHost);
     CUERR;
 
-    outputData(outfile, (FT)result[NN*BB-1].y);
+    writeOutput64(outfile, (FT)result[NN*BB-1].y);
   }
 
   cudaFree(d_source);
