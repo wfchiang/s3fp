@@ -257,8 +257,9 @@ There are more demo benchmarks for round-off error estimation in this package.
 But they cannot be demonstrated by using **s3fp-demo.py** at this point. 
 Here are the descriptions for running those benchmarks. 
 
-#### DQMOM
- run this benchmark, 
+*** DQMOM *** 
+
+To run this benchmark, 
 the user need to go to 
 
 ```
