@@ -1,28 +1,35 @@
 
 CC=g++
 
-S3FP_DIR=../..
+S3FP_DIR=../../../src
 
 all: compile
 
-INPUT_SIZE=240
+N_VARS=240
 EXP=
-ifeq ($(INPUT_SIZE),9)
+ifeq ($(N_VARS),9)
 	EXP=EXP1
-else ifeq ($(INPUT_SIZE),240)
+else ifeq ($(N_VARS),240)
 	EXP=EXP5
-else ifeq ($(INPUT_SIZE),960)
+else ifeq ($(N_VARS),960)
 	EXP=EXP4
 else 
-	$(error NO SUCH INPUT SIZE $(INPUT_SIZE))
+	$(error NO SUCH INPUT SIZE $(N_VARS))
 endif 
-TIMEOUT=1000
-RESOURCE=SVE # or TIME
-RSEED=0
-PARALLELRT=true
-FTERROR=REL
-INPUT_RANGE_FILE=$(INPUT_SIZE)-input-ranges
-REL_DELTA=0.001
+
+
+TIMEOUT = 1000
+RESOURCE = SVE # or TIME
+RSEED = 0
+ERR_FUNC = REL
+INPUT_RANGE_FILE = $(N_VARS)-input-ranges
+REL_DELTA = 0.001
+
+INPUT_FILE = input_file
+EXE_LP = dqmom-32 
+EXE_HP = dqmom-128 
+OUTPUT_LP = dqmom-32_output
+OUTPUT_HP = dqmom-128_output 
 
 
 compile: input_ranges_generator dqmom-32 dqmom-128
@@ -39,48 +46,56 @@ input_ranges_generator:
 
 create-base-conf:
 	@echo "==== generate s3fp_setting ====" 
-	@echo TIMEOUT = $(TIMEOUT) > s3fp_setting
+	@echo N_VARS = $(N_VARS) > s3fp_setting
+	@echo TIMEOUT = $(TIMEOUT) >> s3fp_setting
 	@echo RESOURCE = $(RESOURCE) >> s3fp_setting
 	@echo RSEED = $(RSEED) >> s3fp_setting
-	@echo FTERROR = $(FTERROR) >> s3fp_setting
+	@echo ERR_FUNC = $(ERR_FUNC) >> s3fp_setting
+	@echo ERR_OPT = LAST >> s3fp_setting 
 	@echo REL_DELTA = $(REL_DELTA) >> s3fp_setting
 	@echo UNIFORM_INPUT = false >> s3fp_setting
 	@echo INPUT_RANGE_FILE = $(INPUT_RANGE_FILE) >> s3fp_setting
-	@echo PARALLELRT = $(PARALLELRT) >> s3fp_setting 
+	@echo INPUT_FILE = $(INPUT_FILE) >> s3fp_setting 
+	@echo EXE_LP = $(EXE_LP) >> s3fp_setting 
+	@echo EXE_HP = $(EXE_HP) >> s3fp_setting 
+	@echo OUTPUT_LP = $(OUTPUT_LP) >> s3fp_setting 
+	@echo OUTPUT_HP = $(OUTPUT_HP) >> s3fp_setting 
 
 test-urt: create-base-conf input_ranges_generator
 	@echo RT = URT >> s3fp_setting 
 	@echo "==== generate input ranges ===="
-	@input_ranges_generator $(INPUT_SIZE) $(INPUT_RANGE_FILE)
+	@input_ranges_generator $(N_VARS) $(INPUT_RANGE_FILE)
 	@echo "==== run s3fp ===="
-	@$(S3FP_DIR)/s3fp 32 $(INPUT_SIZE) dqmom_input dqmom-32 dqmom_output_32 dqmom-128 dqmom_output_128  
+	@$(S3FP_DIR)/s3fp 
 
 test-bgrt: create-base-conf input_ranges_generator
 	@echo RT = BGRT >> s3fp_setting 
 	@echo "==== generate input ranges ===="
-	@input_ranges_generator $(INPUT_SIZE) $(INPUT_RANGE_FILE)
+	@input_ranges_generator $(N_VARS) $(INPUT_RANGE_FILE)
 	@echo "==== run s3fp ===="
-	@$(S3FP_DIR)/s3fp 32 $(INPUT_SIZE) dqmom_input dqmom-32 dqmom_output_32 dqmom-128 dqmom_output_128  
+	@$(S3FP_DIR)/s3fp 
 
 test-ils: create-base-conf input_ranges_generator
 	@echo RT = ILS >> s3fp_setting 
 	@echo "==== generate input ranges ===="
-	@input_ranges_generator $(INPUT_SIZE) $(INPUT_RANGE_FILE)
+	@input_ranges_generator $(N_VARS) $(INPUT_RANGE_FILE)
 	@echo "==== run s3fp ===="
-	@$(S3FP_DIR)/s3fp 32 $(INPUT_SIZE) dqmom_input dqmom-32 dqmom_output_32 dqmom-128 dqmom_output_128  
+	@$(S3FP_DIR)/s3fp 
 
 test-pso: create-base-conf input_ranges_generator
 	@echo RT = PSO >> s3fp_setting 
 	@echo "==== generate input ranges ===="
-	@input_ranges_generator $(INPUT_SIZE) $(INPUT_RANGE_FILE)
+	@input_ranges_generator $(N_VARS) $(INPUT_RANGE_FILE)
 	@echo "==== run s3fp ===="
-	@$(S3FP_DIR)/s3fp 32 $(INPUT_SIZE) dqmom_input dqmom-32 dqmom_output_32 dqmom-128 dqmom_output_128  
+	@$(S3FP_DIR)/s3fp 
 
 clean:
+	-rm *~
+	-rm s3fp_setting 
 	-rm dqmom-32 dqmom-64 dqmom-128
-	-rm dqmom_input*
-	-rm dqmom_output_*
+	-rm dqmom-32_output dqmom-64_output dqmom-128_output 
+	-rm $(INPUT_FILE) 
 	-rm __outdump
-	-rm best_input
+	-rm best_input_*
 	-rm *-input-ranges
 	-rm input_ranges_generator
