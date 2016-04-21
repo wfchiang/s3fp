@@ -147,16 +147,13 @@ test-pso-gemm: test-gemm
 
 
 
-s3fp-clean:
-	-rm geqrf_input*
-	-rm getrf_input*
-	-rm gemm_input*
-	-rm sgeqrf_output*
-	-rm sgetrf_output*
-	-rm sgemm_output*
-	-rm dgeqrf_output*
-	-rm dgetrf_output*
-	-rm dgemm_output*
+clean:
+	-rm *~
+	-rm $(INPUT_FILE) $(OUTPUT_LP) $(OUTPUT_HP) 
+	-rm best_input_* 
+	-rm __outdump 
+	-rm s3fp_setting 
+
 
 
 

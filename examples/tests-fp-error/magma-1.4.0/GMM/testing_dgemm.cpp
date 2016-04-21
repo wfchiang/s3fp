@@ -56,7 +56,7 @@ int main( int argc, char** argv)
     // hack the arguments
     char *input_name = argv[argc-2];
     char *output_name = argv[argc-1];
-    assert(argc >= 7);
+    assert(argc >= 9);
     argv[argc-1] = NULL;
     argv[argc-2] = NULL;
     argc -= 2;
@@ -138,29 +138,29 @@ int main( int argc, char** argv)
 	    // beta = (double) 1.2;
 	    for (unsigned int ri = 0 ; ri < sizeA ; ri++) {
 	      if (ri % lda == 0) {
-		fillInputs64(infile, &h_A[ri], 1);
+		fillInputs32to64(infile, &h_A[ri], 1);
 		// h_A[ri] = (double) ri;
 	      }
 	      else h_A[ri] = (double) 0.0;
 	    }
 	    for (unsigned int ci = 0 ; ci < sizeB ; ci++) {
 	      if (ci < ldb) {
-		fillInputs64(infile, &h_B[ci], 1);
+		fillInputs32to64(infile, &h_B[ci], 1);
 		// h_B[ci] = (double) ci;
 	      }
 	      else h_B[ci] = (double) 0.0;
 	    }
-	    fillInputs64(infile, &h_C[0], 1);
+	    fillInputs32to64(infile, &h_C[0], 1);
 	    // h_C[0] = (double) 1.3;
 	    for (unsigned int rci = 1 ; rci < sizeC ; rci++) {
 	      h_C[rci] = (double) 0.0;
 	    }
 #else
-	    fillInputs64(infile, &alpha, 1);
-	    fillInputs64(infile, &beta,  1);
-	    fillInputs64(infile, h_A, sizeA);
-	    fillInputs64(infile, h_B, sizeB);
-	    fillInputs64(infile, h_C, sizeC);
+	    fillInputs32to64(infile, &alpha, 1);
+	    fillInputs32to64(infile, &beta,  1);
+	    fillInputs32to64(infile, h_A, sizeA);
+	    fillInputs32to64(infile, h_B, sizeB);
+	    fillInputs32to64(infile, h_C, sizeC);
 #endif 
             
             /* =====================================================================

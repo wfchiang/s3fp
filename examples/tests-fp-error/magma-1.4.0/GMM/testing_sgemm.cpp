@@ -56,7 +56,7 @@ int main( int argc, char** argv)
     // hack the arguments
     char *input_name = argv[argc-2];
     char *output_name = argv[argc-1];
-    assert(argc >= 7);
+    assert(argc >= 9); 
     argv[argc-1] = NULL;
     argv[argc-2] = NULL;
     argc -= 2;
@@ -138,35 +138,35 @@ int main( int argc, char** argv)
 
 	    // overwrite
 #ifdef TAINED
-	    fillInputs32to64(infile, &alpha, 1);
+	    fillInputs32to32(infile, &alpha, 1);
 	    // alpha = (float) 1.1;
-	    fillInputs32to64(infile, &beta,  1);
+	    fillInputs32to32(infile, &beta,  1);
 	    // beta = (float) 1.2;
 	    for (unsigned int ri = 0 ; ri < sizeA ; ri++) {
 	      if (ri % lda == 0) {
-		fillInputs32(infile, &h_A[ri], 1);
+		fillInputs32to32(infile, &h_A[ri], 1);
 		// h_A[ri] = (float) ri;
 	      }
 	      else h_A[ri] = (float) 0.0;
 	    }
 	    for (unsigned int ci = 0 ; ci < sizeB ; ci++) {
 	      if (ci < ldb) {
-		fillInputs32(infile, &h_B[ci], 1);
+		fillInputs32to32(infile, &h_B[ci], 1);
 		// h_B[ci] = (float) ci;
 	      }
 	      else h_B[ci] = (float) 0.0;
 	    }
-	    fillInputs32(infile, &h_C[0], 1);
+	    fillInputs32to32(infile, &h_C[0], 1);
 	    // h_C[0] = (float) 1.3;
 	    for (unsigned int rci = 1 ; rci < sizeC ; rci++) {
 	      h_C[rci] = (float) 0.0;
 	    }
 #else
-	    fillInputs32(infile, &alpha, 1);
-	    fillInputs32(infile, &beta,  1);
-	    fillInputs32(infile, h_A, sizeA);
-	    fillInputs32(infile, h_B, sizeB);
-	    fillInputs32(infile, h_C, sizeC);
+	    fillInputs32to32(infile, &alpha, 1);
+	    fillInputs32to32(infile, &beta,  1);
+	    fillInputs32to32(infile, h_A, sizeA);
+	    fillInputs32to32(infile, h_B, sizeB);
+	    fillInputs32to32(infile, h_C, sizeC);
 #endif 
             
             /* =================================================================
