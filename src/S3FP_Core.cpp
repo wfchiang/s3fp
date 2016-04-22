@@ -847,7 +847,7 @@ void reportResult (const char *tname) {
   /* 
      Output to result log 
   */
-  const char *logname = "./s3fp_results.csv" 
+  const char *logname = "./s3fp_results.csv"; 
   FILE *flog = NULL; 
   
   // check if the file exist and open it 
