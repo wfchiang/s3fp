@@ -222,7 +222,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = src examples scripts 
+SUBDIRS = src examples 
 all: all-recursive
 
 .SUFFIXES:

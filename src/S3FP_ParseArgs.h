@@ -31,65 +31,6 @@ enum ENUM_TRESOURCE {
 };
 #endif 
 
-#ifndef S3FP_OPT_OBJS
-#define S3FP_OPT_OBJS 
-enum ENUM_OPT_OBJS {
-  NA_OPT_OBJS, 
-  // last place rel. error 
-  LAST_REL_ERROR_OPT_OBJS, 
-  // sum. rel. error 
-  SUM_REL_ERROR_OPT_OBJS, 
-  // sum. |rel. error|
-  ABSSUM_REL_ERROR_OPT_OBJS, 
-  // last place ulp error 
-  LAST_ULP_ERROR_OPT_OBJS, 
-  // last place abs. error 
-  LAST_ABS_ERROR_OPT_OBJS, 
-  // sum abs. error 
-  SUM_ABS_ERROR_OPT_OBJS, 
-  // sum. |abs. error| 
-  ABSSUM_ABS_ERROR_OPT_OBJS, 
-  // last place high value  
-  LAST_HIGHP_VALUE_OPT_OBJS, 
-  // last place |high value| 
-  LAST_HIGHP_ABSV_OPT_OBJS, 
-  // sum. high value
-  SUM_HIGHP_VALUE_OPT_OBJS, 
-  // sum. |high value|
-  SUM_HIGHP_ABSV_OPT_OBJS, 
-  // last place low value 
-  LAST_LOWP_VALUE_OPT_OBJS, 
-  // last place |low value|
-  LAST_LOWP_ABSV_OPT_OBJS, 
-  // sum. low value 
-  SUM_LOWP_VALUE_OPT_OBJS, 
-  // sum. |low value| 
-  SUM_LOWP_ABSV_OPT_OBJS, 
-
-  /*
-    Here are some experimental objectives 
-  */
-  LAST_HIGHP_VALUE_THEN_LAST_REL_ERROR_OPT_OBJS, 
-  APPROACH_ZERO_THEN_HIGH_REL_ERROR_OPT_OBJS, 
-  DELAUNAY_TRIANGULATION_OPT_OBJS, 
-  INC_CONVEX_HULL_OPT_OBJS, 
-  DSGESV_OPT_OBJS, 
-
-  OBJECTIVE_AND_REPRESENT_OPT_OBJS, 
-
-  HIGHV_AND_REPRESENT_OPT_OBJS, 
-  INNSPHERE_OPT_OBJS, 
-
-  FIRST_FPS_AND_DIS_OPT_OBJS, 
-  FPS_AND_DIS_4DIV_OPT_OBJS, 
-
-  GLPK_LP_OPT_OBJS, 
-  SORTING_DIV_OPT_OBJS, 
-  SCANNING_DIV_OPT_OBJS, 
-  KMEANS_OPT_OBJS 
-}; 
-#endif 
-
 #ifndef S3FP_OPT_RANGE 
 #define S3FP_OPT_RANGE 
 enum ENUM_OPT_RANGE {
@@ -168,29 +109,6 @@ enum ENUM_SIG_FUNC {
 }; 
 #endif 
 
-/*
-#ifndef S3FP_DIV_FUNC 
-#define S3FP_DIV_FUNC 
-enum ENUM_DIV_FUNC {
-  NA_DIV_FUNC, 
-  SIGN_DIV_FUNC, 
-  FLOOR_DIV_FUNC, 
-  CONSIST_DIV_FUNC, 
-  GEOMETRIC_DIV_FUNC, 
-*/
-  /*
-    some experimental divergence functions 
-  */
-/*
-  SORTING_DIV_DIV_FUNC, 
-  KMEANS_DIV_FUNC, 
-  BDECISION_SEQ_DIV_FUNC, 
-  INT_SEQ_DIV_FUNC, 
-  WEAK_SINGLE_SIG_VIO
-}; 
-#endif 
-*/
-
 #ifndef S3FP_RANDOM_FUNC 
 #define S3FP_RANDOM_FUNC
 enum ENUM_RANDOM_FUNC {
@@ -199,10 +117,6 @@ enum ENUM_RANDOM_FUNC {
 }; 
 #endif 
 
-bool testtesttest (); 
-
-
-string getOPTOBJSString (ENUM_OPT_OBJS opt_objs); 
 
 string getOPTREPRESENTString (ENUM_OPT_REPRESENT opt_represent); 
 

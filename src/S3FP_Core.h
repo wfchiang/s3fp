@@ -207,8 +207,6 @@ public:
     // ost << endl;
     if (has_best_error) {
       ost << "Best Error: [" << (CONSOLE_OUTPUT_TYPE) best_error.lb << ", " << (CONSOLE_OUTPUT_TYPE) best_error.ub << "]" << endl;
-      ost << "vLP : vHP when Error = " << (CONSOLE_OUTPUT_TYPE) best_error.lb << endl; 
-      ost << "vLP : vHP when Error = " << (CONSOLE_OUTPUT_TYPE) best_error.ub << endl; 
     }
     else ost << "Best Error: N/A" << endl;
   }
@@ -418,62 +416,6 @@ void dumpCONFtoStdout (CONF conf) {
   for (unsigned int di = 0 ; di < conf.size() ; di++) 
     cout << conf[di].first << " : [" << (CONSOLE_OUTPUT_TYPE) conf[di].second.getLB() << ", " << (CONSOLE_OUTPUT_TYPE) conf[di].second.getUB() << "]" << endl;
   cout << "------------------------------------" << endl;
-}
-
-
-/*
-  For the switch rate of some of my experimental objectives 
-*/
-float switchRateOPTOBJS (ENUM_OPT_OBJS top_objs, ENUM_OPT_OBJS curr_objs) {
-  time_t curr_time; 
-  
-  switch (top_objs) {
-  case LAST_HIGHP_VALUE_THEN_LAST_REL_ERROR_OPT_OBJS:
-    if (curr_objs == LAST_HIGHP_VALUE_OPT_OBJS) 
-      return (RRESTART / 5); 
-    else if (curr_objs == LAST_REL_ERROR_OPT_OBJS) 
-      return (RRESTART / 10);
-    else assert(false && "[ERROR](switchRateOPTOBJS): No such curr_objs"); 
-    break;
-  case APPROACH_ZERO_THEN_HIGH_REL_ERROR_OPT_OBJS:
-    if (curr_objs == LAST_HIGHP_ABSV_OPT_OBJS) {
-      if (T_RESOURCE == TIME_TRESOURCE) {
-	time(&curr_time); 
-	if ((curr_time - AZ_HRE_time_last_global_update) > ((float)TIMEOUT * frac_AZ_to_HRE)) 
-	  return 1; 
-	else return 0;
-      }
-      else if (T_RESOURCE == SVE_TRESOURCE) {
-	if ((N_RTS - AZ_HRE_sve_last_global_update) > ((float)TIMEOUT * frac_AZ_to_HRE)) 
-	  return 1; 
-	else return 0;
-      }
-      else assert(false); 
-    }
-    else if (curr_objs == LAST_REL_ERROR_OPT_OBJS) {
-      if (T_RESOURCE == TIME_TRESOURCE) {
-	time(&curr_time); 
-	if ((curr_time - AZ_HRE_time_last_global_update) > ((float)TIMEOUT * frac_HRE_to_AZ))
-	  return 1; 
-	else return 0;
-      }
-      else if (T_RESOURCE == SVE_TRESOURCE) {
-	if ((N_RTS - AZ_HRE_sve_last_global_update) > ((float)TIMEOUT * frac_HRE_to_AZ))
-	  return 1; 
-	else return 0;
-      }
-      else assert(false); 
-    }
-    else assert(false && "[ERROR](switchRateOPTOBJS): No such curr_objs"); 
-    break;
-  default:
-    assert(false && "[ERROR](switchRateOPTOBJS): No such top level objs");
-    break;
-  }
-}
-
-bool switchOPTOBJS (ENUM_OPT_OBJS top_objs, ENUM_OPT_OBJS curr_objs) {
-  return toAccept(switchRateOPTOBJS(top_objs, curr_objs));
 }
 
 

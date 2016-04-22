@@ -593,12 +593,9 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
     eva_basis.runHP(&hpErr, vHPs);
     assert(vLPs.size() % eva_basis.getNInputRepeats() == 0);
     assert(vHPs.size() % eva_basis.getNInputRepeats() == 0);
-    // check is timeout 
-    if (isTimeout(TSTART)) break; // return local_best;
     
     long int n_outputs_per_input_vLP = vLPs.size() / eva_basis.getNInputRepeats();
     long int n_outputs_per_input_vHP = vHPs.size() / eva_basis.getNInputRepeats(); 
-    N_RTS += eva_basis.getNInputRepeats(); 
 
     // read the output files 
     vector<HFP_TYPE> this_vLPs; 
@@ -630,6 +627,10 @@ grtEvaluateCONF (EvaluationBasis eva_basis, unsigned int N, CONF conf) {
 	N_GLOBAL_UPDATES++; 	
       }
     }
+
+    // check is timeout 
+    N_RTS += eva_basis.getNInputRepeats(); 
+    if (isTimeout(TSTART)) break; // return local_best;
   }
 
   return local_best;
@@ -809,6 +810,10 @@ bool isValidFP (FT in_fp) {
 
 
 void reportResult (const char *tname) {
+
+  /* 
+     Output to console
+  */ 
   cout << "N VALID " << tname << " TESTS: " << N_VALID_RTS << endl;
   cout << "N " << tname << " TESTS: " << N_RTS << endl;
   cout << "N LOCAL UPDATES: " << N_LOCAL_UPDATES << endl;
@@ -836,6 +841,100 @@ void reportResult (const char *tname) {
   if (CHECK_UNSTABLE_ERROR && (HALT_NOW == false)) {
     fprintf(unstable_report, "0 0\n"); 
   }
+
+
+
+  /* 
+     Output to result log 
+  */
+  const char *logname = "./s3fp_results.log"; 
+  FILE *flog = NULL; 
+  
+  // check if the file exist and open it 
+  flog = fopen(logname, "r"); 
+  if (flog == NULL) { // the file doesn't exist 
+    flog = fopen(logname, "w"); 
+    fprintf(flog, "\"Log Time\","); 
+    fprintf(flog, "\"Error Func.\","); 
+    fprintf(flog, "\"Average Error\","); 
+    fprintf(flog, "\"Error LB\","); 
+    fprintf(flog, "\"Error UB\","); 
+    fprintf(flog, "\"Abs. Worst\","); 
+    fprintf(flog, "\"Elapse Time\","); 
+    fprintf(flog, "\"# SVE\"\n"); 
+  }
+  else { // the file exists 
+    fclose(flog); 
+    flog = fopen(logname, "a"); 
+  }
+
+  assert(flog != NULL); 
+
+  // write log time 
+  time_t log_time; 
+  time( &log_time ); 
+  
+  struct tm * tm_log_time = localtime( &log_time ); 
+  
+  string str_log_time( asctime(tm_log_time) ); 
+  if (str_log_time[str_log_time.length()-1] == '\n') 
+    str_log_time[str_log_time.length()-1] = '\0'; 
+ 
+  fprintf(flog, "\"%s\",", str_log_time.c_str()); 
+
+  // write error func 
+  switch(ERR_FUNC) {
+  case REL_ERR_FUNC: 
+    fprintf(flog, "\"REL\","); 
+    break; 
+  case ABSREL_ERR_FUNC: 
+    fprintf(flog, "\"ABSREL\","); 
+    break; 
+  case ABSRELMAXONE_ERR_FUNC: 
+    fprintf(flog, "\"ABSRELMAXONE\","); 
+    break; 
+  case ABS_ERR_FUNC: 
+    fprintf(flog, "\"ABS\","); 
+    break; 
+  case ABSABS_ERR_FUNC: 
+    fprintf(flog, "\"ABSABS\","); 
+    break; 
+  case LOWP_ERR_FUNC:
+    fprintf(flog, "\"LOWP\","); 
+    break; 
+  default: 
+    assert("ERROR: invalid ERR_FUNC..."); 
+  }
+  
+  // write average error 
+  fprintf(flog, "%11.10f,", (double) error_ave); 
+  
+  // write error LB 
+  assert(GLOBAL_BEST.has_best_error); 
+  double worst_lb = GLOBAL_BEST.best_error.lb; 
+  fprintf(flog, "%11.10f,", worst_lb); 
+  
+  // write error UB 
+  assert(GLOBAL_BEST.has_best_error); 
+  double worst_ub = GLOBAL_BEST.best_error.ub; 
+  fprintf(flog, "%11.10f,", worst_ub); 
+  
+  // write absolute worst-case error 
+  double abs_worst_ub = (worst_ub >= 0.0) ? worst_ub : (-1.0 * worst_ub);  
+  double abs_worst_lb = (worst_lb >= 0.0) ? worst_lb : (-1.0 * worst_lb); 
+  double abs_worst = (abs_worst_ub >= abs_worst_lb) ? abs_worst_ub : abs_worst_lb ; 
+  fprintf(flog, "%11.10f,", abs_worst); 
+  
+  // write elapse time 
+  time_t tend; 
+  time(&tend);
+  fprintf(flog, "%d,", (tend - TSTART)); 
+
+  // write # SVE
+  fprintf(flog, "%d\n", N_RTS); 
+
+  // close file 
+  fclose(flog); 
 }
 
 
