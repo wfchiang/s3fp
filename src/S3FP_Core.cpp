@@ -855,6 +855,7 @@ void reportResult (const char *tname) {
   if (flog == NULL) { // the file doesn't exist 
     flog = fopen(logname, "w"); 
     fprintf(flog, "\"Log Time\","); 
+    fprintf(flog, "\"RT Mode\","); 
     fprintf(flog, "\"Error Func.\","); 
     fprintf(flog, "\"Average Error\","); 
     fprintf(flog, "\"Error LB\","); 
@@ -881,6 +882,24 @@ void reportResult (const char *tname) {
     str_log_time[str_log_time.length()-1] = '\0'; 
  
   fprintf(flog, "\"%s\",", str_log_time.c_str()); 
+
+  // write RT mode 
+  switch (RT_MODE) {
+  case URT_RT_MODE: 
+    fprintf(flog, "\"URT\","); 
+    break; 
+  case BGRT_RT_MODE: 
+    fprintf(flog, "\"BGRT\","); 
+    break; 
+  case ILS_RT_MODE: 
+    fprintf(flog, "\"ILS\","); 
+    break; 
+  case PSO_RT_MODE: 
+    fprintf(flog, "\"PSO\","); 
+    break; 
+  default: 
+    assert("ERROR: invalid RT_MODE..."); 
+  }
 
   // write error func 
   switch(ERR_FUNC) {
