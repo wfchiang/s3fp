@@ -21,6 +21,10 @@ using namespace std;
 #define FT float
 #endif 
 
+#ifndef IFT 
+#define IFT float 
+#endif 
+
 
 #ifdef EXP1 // experiment 1 setup, totally 9 input vars (3 in models array)
 #define num_iter 1
@@ -121,22 +125,22 @@ int main(int argc, char *argv[]) {
   
   FT *weightsArray = (FT *)malloc(sizeof(FT)*num_cells*N_);
   for (unsigned int vi = 0 ; vi < num_cells*N_ ; vi++) {
-    __float128 data;
-    fread(&data, sizeof(__float128), 1, infile);
+    IFT data; 
+    fread(&data, sizeof(IFT), 1, infile);
     weightsArray[vi] = (FT) data;
   }
 
   FT *weightedAbscissasArray = (FT *)malloc(sizeof(FT)*num_cells*N_xi*N_);
   for (unsigned int vi = 0 ; vi < num_cells*N_xi*N_ ; vi++) {
-    __float128 data;
-    fread(&data, sizeof(__float128), 1, infile);
+    IFT data;
+    fread(&data, sizeof(IFT), 1, infile);
     weightedAbscissasArray[vi] = (FT) data;
   }
 
   FT *modelsArray = (FT *)malloc(sizeof(FT)*num_cells*N_xi*N_);
   for (unsigned int vi = 0 ; vi < num_cells*N_xi*N_ ; vi++) {
-    __float128 data;
-    fread(&data, sizeof(__float128), 1, infile);
+    IFT data;
+    fread(&data, sizeof(IFT), 1, infile);
     modelsArray[vi] = (FT) data;
   }
 
@@ -271,6 +275,7 @@ int main(int argc, char *argv[]) {
 #else
   #ifdef CHECK_BB
     __float128 out_data = (__float128) BBArray_cpu[(num_cells*indicesSize)/2];
+    printf("%f\n", (double)out_data); 
     fwrite(&out_data, sizeof(__float128), 1, outfile);
   #else
     printf("ERROR: Need to either define CHECK_AA or CHECK_BB\n");

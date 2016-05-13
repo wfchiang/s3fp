@@ -4,6 +4,8 @@ export LD_LIBRARY_PATH := ../../:$(LD_LIBRARY_PATH)
 CPP=g++
 NVCC=nvcc
 
+ARCH=sm_20
+
 CUDA_HOME=/home/wfchiang/lib/cuda-6.0
 
 export LD_LIBRARY_PATH := $(CUDA_HOME)/lib64:$(LD_LIBRARY_PATH)
@@ -24,12 +26,12 @@ compile: fft-32 fft-64
 dataio.o: dataio.cpp dataio.h 
 
 fft-32: dataio.o 
-	$(NVCC) -DFT=float -DFT2=float2 -Dmake_FT2=make_float2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=sm_20 
+	$(NVCC) -DFT=float -DFT2=float2 -Dmake_FT2=make_float2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=$(ARCH) 
 
 	$(CPP) fft.o dataio.o -o fft-32 -lcuda -lcudart -L $(CUDA_HOME)/lib64 
 
 fft-64: dataio.o 
-	$(NVCC) -DFT=double -DFT2=double2 -Dmake_FT2=make_double2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=sm_20
+	$(NVCC) -DFT=double -DFT2=double2 -Dmake_FT2=make_double2 -DNN=$(NN) -DBB=$(BB) -DR=$(R) -c fft.cu -arch=$(ARCH) 
 
 	$(CPP) fft.o dataio.o -o fft-64 -lcuda -lcudart -L $(CUDA_HOME)/lib64
 
