@@ -146,7 +146,7 @@ BENCH    = sys.argv[2]
 RT       = sys.argv[3] 
 RSEED    = int(sys.argv[4]) 
 
-TIMEOUT  = int(5000) 
+TIMEOUT  = int(10) 
 RESOURCE = "SVE" 
 
 DIR_CURR = os.getcwd() 
@@ -183,6 +183,16 @@ if (MODE == "round-off"):
         SetUniformInput(-100.0, 100.0) 
 
         TestRoundoff(DIR_BENCH+"/imbalanced-reduction", DIR_CURR) 
+
+    elif (BENCH == "kahan-sum"): 
+        N_VARS = 512
+        EXE_LP = "kahan_sum_32" 
+        EXE_HP = "kahan_sum_128" 
+        ERR_OPT = "LAST" 
+
+        SetUniformInput(-100.0, 100.0) 
+
+        TestRoundoff(DIR_BENCH+"/kahan-sum", DIR_CURR) 
 
     else: 
         sys.exit("Error: unknown benchmark for round-off demo : " + BENCH) 
