@@ -28,7 +28,7 @@ S3FP_EXE=../../../src/s3fp
 
 S3FP_CHECK_UNSTABLE_ERROR=false
 
-MAGMA_DEV=1
+MAGMA_DEV=0
 
 MAGMA_DIR = /home/wfchiang/lib/magma-1.4.0
 
@@ -79,9 +79,6 @@ test-ils-geqrf: test-geqrf
 
 test-pso-geqrf: test-geqrf 
 	@echo RT = PSO >> s3fp_setting
-	@echo N_VARS = $(S3FP_INPUT_SIZE_GEQRF) >> s3fp_setting 
-	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
-	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgeqrf_gpu --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
 	@echo "==== run s3fp ===="
 	$(S3FP_EXE) 
 
