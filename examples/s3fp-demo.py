@@ -61,21 +61,21 @@ def S3FPBasicSetting (fname):
         
     sfile = open(fname, "w") 
 
-    sfile.write("RT = " + RT + "\n") 
-    sfile.write("N_VARS = " + str(N_VARS) + "\n") 
-    sfile.write("TIMEOUT = " + str(TIMEOUT) + "\n") 
-    sfile.write("RESOURCE = " + RESOURCE + "\n") 
-    sfile.write("RSEED = " + str(RSEED) + "\n") 
-    sfile.write("REL_DELTA = " + str(REL_DELTA) + "\n") 
+    sfile.write("RT = "         + RT + "\n") 
+    sfile.write("N_VARS = "     + str(N_VARS) + "\n") 
+    sfile.write("TIMEOUT = "    + str(TIMEOUT) + "\n") 
+    sfile.write("RESOURCE = "   + RESOURCE + "\n") 
+    sfile.write("RSEED = "      + str(RSEED) + "\n") 
+    sfile.write("REL_DELTA = "  + str(REL_DELTA) + "\n") 
 
-    sfile.write("ERR_FUNC = " + ERR_FUNC + "\n") 
-    sfile.write("ERR_OPT = " + ERR_OPT + "\n") 
+    sfile.write("ERR_FUNC = "   + ERR_FUNC + "\n") 
+    sfile.write("ERR_OPT = "    + ERR_OPT + "\n") 
 
     sfile.write("INPUT_FILE = " + INPUT_FILE + "\n") 
-    sfile.write("EXE_LP = " + EXE_LP + "\n") 
-    sfile.write("OUTPUT_LP = " + OUTPUT_LP + "\n") 
-    sfile.write("EXE_HP = " + EXE_HP + "\n") 
-    sfile.write("OUTPUT_HP = " + OUTPUT_HP + "\n") 
+    sfile.write("EXE_LP = "     + EXE_LP + "\n") 
+    sfile.write("OUTPUT_LP = "  + OUTPUT_LP + "\n") 
+    sfile.write("EXE_HP = "     + EXE_HP + "\n") 
+    sfile.write("OUTPUT_HP = "  + OUTPUT_HP + "\n") 
 
     sfile.write("UNIFORM_INPUT = " + UNIFORM_INPUT + "\n") 
     if (UNIFORM_INPUT == "true"): 
@@ -193,6 +193,16 @@ if (MODE == "round-off"):
         SetUniformInput(-100.0, 100.0) 
 
         TestRoundoff(DIR_BENCH+"/kahan-sum", DIR_CURR) 
+
+    elif (BENCH == "rigidBody1"): 
+        N_VARS = 3 
+        EXE_LP = "rigidBody1_32" 
+        EXE_HP = "rigidBody1_128" 
+        ERR_OPT = "LAST" 
+
+        SetUniformInput(-15.0, 15.0) 
+
+        TestRoundoff(DIR_BENCH+"/rigidBody1", DIR_CURR) 
 
     else: 
         sys.exit("Error: unknown benchmark for round-off demo : " + BENCH) 

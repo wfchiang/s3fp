@@ -208,6 +208,7 @@ s3fp-demo.py round-off [ benchmark name ] [ testing method ] [ random seed ]
     * **balanced-reduction**: balanced reduction. 
     * **imbalanced-reduction**: imbalanced reduction. 
     * **kahan-sum**: Kahan's summation.  
+    * **rigidBody1**: rigidBody 1. 
 
 - **testing method**: 
 
