@@ -166,8 +166,8 @@ if (MODE == "round-off"):
 
     if (BENCH == "balanced-reduction"): 
         N_VARS = 512 
-        EXE_LP = "balanced_reduction_32" 
-        EXE_HP = "balanced_reduction_128" 
+        EXE_LP = "./balanced_reduction_32" 
+        EXE_HP = "./balanced_reduction_128" 
         ERR_OPT = "LAST"
         
         SetUniformInput(-100.0, 100.0) 
@@ -176,8 +176,8 @@ if (MODE == "round-off"):
 
     elif (BENCH == "imbalanced-reduction"): 
         N_VARS = 512 
-        EXE_LP = "imbalanced_reduction_32" 
-        EXE_HP = "imbalanced_reduction_128" 
+        EXE_LP = "./imbalanced_reduction_32" 
+        EXE_HP = "./imbalanced_reduction_128" 
         ERR_OPT = "LAST" 
         
         SetUniformInput(-100.0, 100.0) 
@@ -186,8 +186,8 @@ if (MODE == "round-off"):
 
     elif (BENCH == "kahan-sum"): 
         N_VARS = 512
-        EXE_LP = "kahan_sum_32" 
-        EXE_HP = "kahan_sum_128" 
+        EXE_LP = "./kahan_sum_32" 
+        EXE_HP = "./kahan_sum_128" 
         ERR_OPT = "LAST" 
 
         SetUniformInput(-100.0, 100.0) 
@@ -196,8 +196,8 @@ if (MODE == "round-off"):
 
     elif (BENCH == "rigidBody1"): 
         N_VARS = 3 
-        EXE_LP = "rigidBody1_32" 
-        EXE_HP = "rigidBody1_128" 
+        EXE_LP = "./rigidBody1_32" 
+        EXE_HP = "./rigidBody1_128" 
         ERR_OPT = "LAST" 
 
         SetUniformInput(-15.0, 15.0) 
