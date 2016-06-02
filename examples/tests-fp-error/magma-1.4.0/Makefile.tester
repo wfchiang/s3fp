@@ -115,8 +115,8 @@ test-pso-getrf: test-getrf
 
 
 test-gemm: create-base-conf 
-	@cp ./GMM/testing_sgemm_gpu.cpp $(MAGMA_DIR)/testing
-	@cp ./GMM/testing_dgemm_gpu.cpp $(MAGMA_DIR)/testing
+	@cp ./GMM/testing_sgemm.cpp $(MAGMA_DIR)/testing
+	@cp ./GMM/testing_dgemm.cpp $(MAGMA_DIR)/testing
 	cd $(MAGMA_DIR) ; make 
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
 	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
