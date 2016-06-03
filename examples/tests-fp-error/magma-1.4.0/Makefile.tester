@@ -1,7 +1,7 @@
 
 # ==== Makefile setting for S3FP ====
 
-S3FP_TIMEOUT=100 
+S3FP_TIMEOUT=20 
 S3FP_RESOURCE=SVE
 S3FP_RSEED=0
 
@@ -16,13 +16,14 @@ INPUT_FILE=random_input
 OUTPUT_LP=output_lp 
 OUTPUT_HP=output_hp 
 
-S3FP_INPUT_M=16
-S3FP_INPUT_N=16
+S3FP_INPUT_M=32
+S3FP_INPUT_N=32
 # M * N
-S3FP_INPUT_SIZE_GETRF=256
-S3FP_INPUT_SIZE_GEQRF=256
+S3FP_INPUT_SIZE_GETRF=1024
+S3FP_INPUT_SIZE_GEQRF=1024
 # (M * N) * 3 + 2
-S3FP_INPUT_SIZE_GEMM=770
+# S3FP_INPUT_SIZE_GEMM=770
+S3FP_INPUT_SIZE_GEMM=3074
 
 S3FP_EXE=../../../src/s3fp 
 
@@ -119,8 +120,8 @@ test-gemm: create-base-conf
 	@cp ./GMM/testing_dgemm.cpp $(MAGMA_DIR)/testing
 	cd $(MAGMA_DIR) ; make 
 	@echo N_VARS = $(S3FP_INPUT_SIZE_GEMM) >> s3fp_setting 
-	@echo EXE_LP = \"$(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting
-	@echo EXE_HP = \"$(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -n $(S3FP_INPUT_N)\" >> s3fp_setting 
+	@echo EXE_LP = $(MAGMA_DIR)/testing/testing_sgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -k $(S3FP_INPUT_N) -n $(S3FP_INPUT_N) >> s3fp_setting
+	@echo EXE_HP = $(MAGMA_DIR)/testing/testing_dgemm --dev $(MAGMA_DEV) -m $(S3FP_INPUT_M) -k $(S3FP_INPUT_N) -n $(S3FP_INPUT_N) >> s3fp_setting 
 
 test-urt-gemm: test-gemm 
 	@echo RT = URT >> s3fp_setting
