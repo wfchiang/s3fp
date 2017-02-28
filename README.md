@@ -4,8 +4,7 @@
 
 ## Important Announcement 
 --------
-The repository will not be maintained anymore. 
-Instead, S3FP is now under SoarLab's github. 
+The up-to-date version of S3FP will be maintained under SoarLab's github. 
 [https://github.com/soarlab/S3FP](https://github.com/soarlab/S3FP)
 
 
