@@ -1,15 +1,6 @@
 # S3FP
 ----
 
-
-## Important Announcement 
---------
-The up-to-date version of S3FP will be maintained under SoarLab's github. 
-[https://github.com/soarlab/S3FP](https://github.com/soarlab/S3FP)
-
-
-
-
 ## About S3FP
 ----------
 S3FP is a dynamic testing tool for triggering high floating-point error scenarios of programs. 
